@@ -4,7 +4,7 @@ https://academy.datastax.com/planet-cassandra//cassandra
 CREATE KEYSPACE restbucks
 WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
 
-USE starbucks;
+USE restbucks;
 
 CREATE TYPE order_items (
    qty int,
