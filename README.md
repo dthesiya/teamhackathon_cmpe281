@@ -6,6 +6,7 @@ Discussing the architecture of project development.
 Project development is <b>in progress</b>.
 
 
+
 Team QuadCore
 =============
 
