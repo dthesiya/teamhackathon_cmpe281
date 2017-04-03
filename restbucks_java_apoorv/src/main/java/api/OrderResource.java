@@ -50,7 +50,7 @@ public class OrderResource extends ServerResource {
                 return new JacksonRepresentation<api.Status>(api) ;
             }                
             else {
-                Representation result = new JacksonRepresentation<Order>(order) ;  // create a respresentation for order response
+                Representation result = new JacksonRepresentation<Order>(existing_order) ;  // create a respresentation for order response
                 try { 
                     System.out.println( "Get Text: " + result.getText() ) ;  //pring order as text on server console
                     String  hash = DigestUtils.toMd5 ( result.getText() ) ;  // generate hash for etagging
@@ -77,7 +77,7 @@ public class OrderResource extends ServerResource {
 
         Order order = orderRep.getObject() ; // get the pojo from above representation
         RestbucksAPI.setOrderStatus( order, getReference().toString(), RestbucksAPI.OrderStatus.PLACED ) ; // Set the order as Placed by default once client sends the request
-        RestbucksAPI.placeOrder( order.id, order ) ;  // Process the order and store in database
+        RestbucksAPI.placeOrder( order.order_id, order ) ;  // Process the order and store in database
 
         Representation result = new JacksonRepresentation<Order>(order) ; // creating a response representation to client
         try { 
@@ -128,8 +128,8 @@ public class OrderResource extends ServerResource {
             // Order is still in placed status, we can safely update it
 
             RestbucksAPI.setOrderStatus( order, getReference().toString(), RestbucksAPI.OrderStatus.PLACED ) ;
-            order.id = existing_order.id ;
-            RestbucksAPI.updateOrder( order.id, order ) ;  // call the update order method and update details in database
+            order.order_id = existing_order.order_id ;
+            RestbucksAPI.updateOrder( order.order_id, order ) ;  // call the update order method and update details in database
             Representation result = new JacksonRepresentation<Order>(order) ; // representation object for response
             try { 
                     System.out.println( "Text: " + result.getText() ) ; //caching  using etags
