@@ -1,0 +1,19 @@
+https://academy.datastax.com/planet-cassandra//cassandra
+
+
+CREATE TYPE order_items (
+   qty int,
+   name text,
+   milk_type text,
+   size text,
+   price decimal
+   );
+   
+   CREATE TABLE starbucks_order (
+   order_id uuid PRIMARY KEY,
+   amount decimal,
+   location text,
+   items list<frozen<order_items>>,
+   status text,
+   message text
+   );
