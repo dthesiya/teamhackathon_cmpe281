@@ -1,6 +1,11 @@
 https://academy.datastax.com/planet-cassandra//cassandra
 
 
+CREATE KEYSPACE starbucks
+WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
+
+USE starbucks;
+
 CREATE TYPE order_items (
    qty int,
    name text,
