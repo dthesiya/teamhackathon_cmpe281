@@ -1,7 +1,7 @@
 https://academy.datastax.com/planet-cassandra//cassandra
 
 
-CREATE KEYSPACE starbucks
+CREATE KEYSPACE restbucks
 WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
 
 USE starbucks;
@@ -14,7 +14,7 @@ CREATE TYPE order_items (
    price decimal
    );
    
-   CREATE TABLE starbucks_order (
+   CREATE TABLE restbucks_order (
    order_id uuid PRIMARY KEY,
    amount decimal,
    location text,
