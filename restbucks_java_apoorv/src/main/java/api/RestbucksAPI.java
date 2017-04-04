@@ -4,7 +4,7 @@ import java.util.concurrent.BlockingQueue ;
 import java.util.concurrent.LinkedBlockingQueue ;
 import java.util.concurrent.ConcurrentHashMap ;
 import java.util.Collection ;
-
+import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
@@ -31,7 +31,7 @@ public class RestbucksAPI {
     
 
     public static void startOrderProcessor() {   //Start queues for the Barista to process the orders
-        StarbucksBarista barista = new StarbucksBarista( orderQueue ) ;
+        RestbucksBarista barista = new RestbucksBarista( orderQueue ) ;
         new Thread(barista).start();
     }
 
@@ -39,7 +39,8 @@ public class RestbucksAPI {
         /*RestbucksAPI.orders.replace( key, order ) ;*/ // update order in the database
     }
 
-    public static Order getOrder(String key) { // retrive individual order
+    public static Order getOrder(String key) {
+		return null; // retrive individual order
         // return RestbucksAPI.orders.get( key ) ; - fetch order from database using order id
     }
 
@@ -90,7 +91,8 @@ public class RestbucksAPI {
     }
 
 
-    public static Collection<Order> getOrders() { // get all orders from the database for this store
+    public static Collection<Order> getOrders() {
+		return null; // get all orders from the database for this store
         // return orders.values() ;
     }
 

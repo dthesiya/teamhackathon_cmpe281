@@ -31,9 +31,9 @@ public class PaymentResource extends ServerResource {
             return new JacksonRepresentation<api.Status>(api) ;
         }
         else { // Mark the order as paid
-            order.id = order_id ;
+            order.order_id = order_id ;
             RestbucksAPI.setOrderStatus( order, getReference().toString(), RestbucksAPI.OrderStatus.PAID ) ;
-            RestbucksAPI.updateOrder( order.id, order ) ; 
+            RestbucksAPI.updateOrder( order.order_id, order ) ; 
             return new JacksonRepresentation<Order>(order) ;           
         }
 
