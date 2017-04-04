@@ -1,9 +1,10 @@
 var express = require('express');
-var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+exports.getindex = function(req, res, next) {
+    res.render('index', { title: 'Starbucks' });
+};
 
-module.exports = router;
+exports.getPrices = function (req, res, next) {
+    res.json(JSON.stringify({small:1.5, medium:2.0, large:2.5}));
+};
