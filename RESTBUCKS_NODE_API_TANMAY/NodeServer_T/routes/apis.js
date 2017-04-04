@@ -1,119 +1,108 @@
 var express = require('express');
 var router = express.Router();
 
-//exports.placeOrder = function(req,res){
-	router.route('/placeorder')
-		.post(function(req,res){
-			console.log('arrived here');
-			var order_item = [];
-			var item = {
+var dbs = require('../database/db');
+
+var item = {
 				qty : {},
 				name : {},
 				milk_type : {},
 				size : {},
 				price : {},
 			}
-			var order = {
-				 id : {},
-				 amount : {},
-				 location : {},
-				 order_item : {}
-			}
-			order.id = req.body.id;
+
+var order = {
+	 order_id : {},
+	 amount : {},
+	 location : {},
+	 items : {},
+	 status : {},
+	 message : {}
+}
+
+var order_items = [];
+
+//exports.placeOrder = function(req,res){
+	router.route('/placeorder')
+		.post(function(req,res){
+			console.log('arrived placeorder');
+			
 			order.amount = req.body.amount;
 			order.location = req.body.location;
-
-			for(var i = 0; i< req.body.order_item.length; i++)
+			order.status = req.body.status;
+			order.message = req.body.message;
+			for(var i = 0; i< req.body.items.length; i++)
 			{							
-				item.qty = req.body.order_item[i].qty;
-				item.name = req.body.order_item[i].name;
-				item.milk_type = req.body.order_item[i].milk_type;
-				item.size = req.body.order_item[i].size;
-				item.price =req.body.order_item[i].price;
-				order_item.push(item);
+				item.qty = req.body.items[i].qty;
+				item.name = req.body.items[i].name;
+				item.milk_type = req.body.items[i].milk_type;
+				item.size = req.body.items[i].size;
+				item.price =req.body.items[i].price;
+				order_items.push(item);
 			}				
-			order.order_item = order_item;
-	
-			console.log("order : ");
-			console.log(order);	
+			order.items = order_items;
 
-			res.send('inserted 1');
+			dbs.createOrder(order,function(result){
+				console.log(result);
+				res.send(result);
+			});
+	
+			// console.log("order : ");
+			// console.log(order);	
 	});
 
 	router.route('/updateorder')
 		.put(function(req,res){
-			console.log('arrived here');
-			var order_item = [];
-			var item = {
-				qty : {},
-				name : {},
-				milk_type : {},
-				size : {},
-				price : {},
-			}
-			var order = {
-				 id : {},
-				 amount : {},
-				 location : {},
-				 order_item : {}
-			}
-			order.id = req.body.id;
+			console.log('arrived updateorder');
+			var items = [];
+			
+			order.order_id = req.body.order_id;
 			order.amount = req.body.amount;
 			order.location = req.body.location;
-
-			for(var i = 0; i< req.body.order_item.length; i++)
+			order.status = req.body.status;
+			order.message = req.body.message;
+			for(var i = 0; i< req.body.items.length; i++)
 			{							
-				item.qty = req.body.order_item[i].qty;
-				item.name = req.body.order_item[i].name;
-				item.milk_type = req.body.order_item[i].milk_type;
-				item.size = req.body.order_item[i].size;
-				item.price =req.body.order_item[i].price;
-				order_item.push(item);
+				item.qty = req.body.items[i].qty;
+				item.name = req.body.items[i].name;
+				item.milk_type = req.body.items[i].milk_type;
+				item.size = req.body.items[i].size;
+				item.price =req.body.items[i].price;
+				order_items.push(item);
 			}				
-			order.order_item = order_item;
+			order.items = order_items;
+
+			dbs.updateOrder(order,function(result){
+				console.log(result);
+				res.send(result);
+			});
 	
 			console.log("order : ");
-			console.log(order);	
+			console.log(order);
 
-			res.send('inserted 1');
 		});
 
 	router.route('/deleteorder')
 		.delete(function(req,res){
-			console.log('arrived here');
-			var order_item = [];
-			var item = {
-				qty : {},
-				name : {},
-				milk_type : {},
-				size : {},
-				price : {},
-			}
-			var order = {
-				 id : {},
-				 amount : {},
-				 location : {},
-				 order_item : {}
-			}
-			order.id = req.body.id;
-			order.amount = req.body.amount;
-			order.location = req.body.location;
+			console.log('arrived deleteorder');
+			
+			var id = req.body.id;
 
-			for(var i = 0; i< req.body.order_item.length; i++)
-			{							
-				item.qty = req.body.order_item[i].qty;
-				item.name = req.body.order_item[i].name;
-				item.milk_type = req.body.order_item[i].milk_type;
-				item.size = req.body.order_item[i].size;
-				item.price =req.body.order_item[i].price;
-				order_item.push(item);
-			}			
-			order.order_item = order_item;
-	
-			console.log("order : ");
-			console.log(order);	
+			dbs.deleteOrder(id,function(result){
+				console.log(result);
+			
+			});
+		});	
 
-			res.send('deleted 1');
-		});		
+	router.route('/vieworders')
+		.get(function(req,res){
+
+			console.log('Arrived in vieworders');
+
+			dbs.viewOrders(function(result){
+				console.log(result);
+				res.send(result);
+			});
+		});	
 
 module.exports = router;
