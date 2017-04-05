@@ -1,0 +1,42 @@
+<div id="placeorder" ng-controller="orderController" ng-init="getOrderDetails()">
+    <div class="container">
+        <div class="row"><h2>Order</h2></div>
+        <div class="row"></div>
+        <div class="row">
+            <h4>Your order: </h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th class="col-md-3 text-center">Coffee</th>
+                    <th class="col-md-2 text-center">Quantity</th>
+                    <th class="col-md-3 text-center">Milk Type</th>
+                    <th class="col-md-2 text-center">Size</th>
+                    <th class="col-md-2 text-center">Price</th>
+                </tr>
+                </thead>
+                <tbody id="form">
+                <tr class='Box divbutton' ng-repeat="item in order.items">
+                    <td class="text-center">
+                        <label>{{item.name}}</label>
+                    </td>
+                    <td class="text-center"><label>{{item.qty}}</label></td>
+                    <td class="text-center">
+                        <label>{{item.milk_type}}</label>
+                    </td>
+                    <td class="text-center">
+                        <label>{{item.milk_type}}</label>
+                    </td>
+                    <td class="text-center"><label for="myvalue">{{item.price}}</label></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <button class="btn btn-primary">Place Order</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,111 +6,111 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
-    <script src="angularjs/home.js"></script>
+    <script src="/controller/routeConfig.js"></script>
+    <script src="/controller/orderController.js"></script>
     <title>Starbucks</title>
     <script>
-        $(document).ready(function(){
-            $("#add").click(function () {
-                var smallvalue = $('[ng-controller="appController"]').scope().prices.small;
-                var newdiv = $( "<tr class='Box divbutton'> <td class='text-center'> <" +
-                    "select class='dropdown' id='coffee'> <option>Mocha</option> <option>Tea</option> " +
-                    "<option>Cappuccino</option> </select> </td> <td class='text-center'>" +
-                    "<input class='form-control input-sm' id='inputsm' type='number'></td> " +
-                    "<td class='text-center'> <select class='dropdown' id='milk'> " +
-                    "<option>Whole</option> <option>Latte</option> <option>Soy</option> </select> </td> " +
-                    "<td class='text-center'> <select class='selectpicker' id='size' onchange='sizeChanged()'> " +
-                    "<option value='small'>Small</option> <option value='medium'>Medium</option> " +
-                    "<option value='large'>large</option> </select> </td> " +
-                    "<td class='text-center'><label for='myvalue'>$ "+smallvalue+"</label></td> " +
-                    "<td> <span type='button' class='remove glyphicon glyphicon-remove-sign' style='color:red' " +
-                    "onclick='$(this).parent().parent().remove();'></span> </td> </tr>" );
-                $("#form").append(newdiv);
-            });
-        });
+        function addRow(tableID){
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+            if(rowCount > 1) {
+                var colCount = table.rows[rowCount - 1].cells.length;
+                for (var i = 0; i < colCount; i++) {
+                    var newcell = row.insertCell(i);
+                    newcell.innerHTML = table.rows[rowCount - 1].cells[i].innerHTML;
+                    newcell.style.textAlign = 'center';
+                    if (i === colCount - 2) {
+                        var smallvalue = $('[ng-controller="orderController"]').scope().prices.small;
+                        newcell.childNodes[0].innerHTML = "$ " + smallvalue;
+                    } else {
+                        switch (newcell.childNodes[0].type) {
+                            case "text":
+                                newcell.childNodes[0].value = "";
+                                break;
+                            case "number":
+                                newcell.childNodes[0].value = "";
+                                break;
+                            case "checkbox":
+                                newcell.childNodes[0].checked = false;
+                                break;
+                            case "select-one":
+                            case "dropdown":
+                                newcell.childNodes[0].selectedIndex = 0;
+                                break;
+                        }
+                    }
+                }
+            }else{
+                var newcell = row.insertCell(0);
+                newcell.innerHTML = "<select class='dropdown' id='coffee' name='coffee'> <option value='mocha'>Mocha</option> <option value='tea'>Tea</option> <option value='cappuccino'>Cappuccino</option> </select>";
+                newcell.style.textAlign = 'center';
+                var newcell = row.insertCell(1);
+                newcell.innerHTML = "<input name='qty' class='form-control input-sm' id='inputsm' type='number'>";
+                newcell.style.textAlign = 'center';
+                var newcell = row.insertCell(2);
+                newcell.innerHTML = "<select class='dropdown' id='milk' name='milk_type'> <option value='whole'>Whole</option> <option value='latte'>Latte</option> <option>Soy</option> </select>";
+                newcell.style.textAlign = 'center';
+                var newcell = row.insertCell(3);
+                newcell.innerHTML = "<select class='dropdown' id='size' onchange='sizeChanged(this)' name='size'> <option value='small' selected>Small</option> <option value='medium'>Medium</option> <option value='large'>large</option> </select>";
+                newcell.style.textAlign = 'center';
+                var newcell = row.insertCell(4);
+                var smallvalue = $('[ng-controller="orderController"]').scope().prices.small;
+                newcell.innerHTML = "<label for='myvalue'>$ "+ smallvalue +"</label>";
+                newcell.style.textAlign = 'center';
+                var newcell = row.insertCell(5);
+                newcell.innerHTML = "<span type='button' class='remove glyphicon glyphicon-remove-sign' style='color:red' onclick='$(this).parent().parent().remove();'></span>";
+                newcell.style.textAlign = 'center';
+            }
+        };
 
-        function sizeChanged() {
-            var size = $('#size').val();
-            var scope = $('[ng-controller="appController"]').scope();
+        function sizeChanged(element) {
+            var size = $(element).val();
+            var scope = $('[ng-controller="orderController"]').scope();
             switch (size) {
                 case "small": {
                     var temp =
-                        $("label[for='myvalue']").html("$ " + scope.prices.small);
+                        $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.small);
                     break;
                 }
                 case "medium": {
-                    $("label[for='myvalue']").html("$ " + scope.prices.medium);
+                    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.medium);
                     break;
                 }
                 case "large": {
-                    $("label[for='myvalue']").html("$ " + scope.prices.large);
+                    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.large);
                     break;
                 }
                 default: {
-                    $("label[for='myvalue']").html("$ " + scope.prices.small);
+                    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.small);
                     break;
                 }
             }
-        }
+        };
     </script>
 </head>
 
-<body ng-app="app" ng-controller="appController" ng-init="getPrices()">
-<h1 class="jumbotron text-center">Starbucks Coffee Shop</h1>
-<div class="container">
-    <h2>Order</h2>
-    <div class="row">
-        <div class="col-md-6 text-left"><h4>Build your order here: </h4></div>
-        <div class="col-md-6 text-right"><button id="add" class="btn btn-info">Add Item</button></div>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead>
-            <tr>
-                <th class="col-md-3 text-center">Coffee</th>
-                <th class="col-md-2 text-center">Quantity</th>
-                <th class="col-md-3 text-center">Milk Type</th>
-                <th class="col-md-2 text-center">Size</th>
-                <th class="col-md-2 text-center">Price</th>
-            </tr>
-            </thead>
-            <tbody id="form">
-            <tr class='Box divbutton'>
-                <td class="text-center">
-                    <select class="dropdown" id="coffee">
-                        <option>Mocha</option>
-                        <option>Tea</option>
-                        <option>Cappuccino</option>
-                    </select>
-                </td>
-                <td class="text-center"><input class="form-control input-sm" id="inputsm" type="number"></td>
-                <td class="text-center">
-                    <select class="dropdown" id="milk">
-                        <option>Whole</option>
-                        <option>Latte</option>
-                        <option>Soy</option>
-                    </select>
-                </td>
-                <td class="text-center">
-                    <select class="selectpicker" id="size" onchange="sizeChanged()">
-                        <option value="small">Small</option>
-                        <option value="medium">Medium</option>
-                        <option value="large">large</option>
-                    </select>
-                </td>
-                <td class="text-center"><label for="myvalue">$ {{prices.small}}</label></td>
-                <td>
-                    <span type="button" class="remove glyphicon glyphicon-remove-sign" style="color:red"
-                    onclick="$(this).parent().parent().remove();"></span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <button class="btn btn-primary">Place Order</button>
+<body ng-app="hackathonApp">
+<div>
+    <h1 class="text-center">Starbucks Coffee Shop</h1>
+    <div class="navbar-default" role="navigation">
+        <div class="container">
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <!--<a href="#placeorder" data-title="Place Order" ng-click="">-->
+                        <!--<i class="fa fa-dashboard"></i>-->
+                        <!--Place Order-->
+                        <!--</a>-->
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
+</div>
+<div class="ng-view">
+
+    <!-- app pages load here -->
 </div>
 </body>
 </html>​
