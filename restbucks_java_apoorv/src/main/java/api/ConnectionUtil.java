@@ -2,6 +2,7 @@ package api;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID ;
 
@@ -14,7 +15,7 @@ import com.datastax.driver.core.Session;
 
 public class ConnectionUtil {
 	Session session = null;
-	
+	Cluster cluster = null;
 	final String KEYSPACE = "restbucks";
     final String TABLE_RESTBUCKS_ORDER_DATA = "restbucks_order";
    
@@ -32,9 +33,9 @@ public class ConnectionUtil {
 	
 	public ConnectionUtil () {
 
-		Cluster cluster = Cluster.builder().addContactPoint("localhost").build();
+		this.cluster = Cluster.builder().addContactPoint("localhost").build();
 		   
-		session = cluster.connect("restbucks");
+		this.session = cluster.connect("restbucks");
 		
 		 
 	     
@@ -62,6 +63,7 @@ public class ConnectionUtil {
                      List<Row> rows =rs.all();
                      if(rows != null) {
                             for(Row row : rows) {
+                            	System.out.println("Printing all rows");
                                    System.out.println(row);
                             }
                      }
@@ -88,8 +90,43 @@ public class ConnectionUtil {
                System.out.println("Exception in select Stament"+e.getMessage());
         }
  }
+	public void removeValue(UUID uid) {
+        try {
+        	  
+               ResultSet rs = session.execute(deleteorderStmt.bind(uid));
+               if(rs != null) {
+                     List<Row> rows =rs.all();
+                     if(rows != null) {
+                            for(Row row : rows) {
+                            	System.out.println("Printing value");
+                                   System.out.println(row);
+                            }
+                     }
+               }
+        } catch(Exception e) {
+               System.out.println("Exception in delete Stament"+e.getMessage());
+        }
+ }
 	
-     
+	public void updateValue(UUID uid, BigDecimal amount, String location,UDTValue item, String status, String message ) {
+        try {
+        	List<UDTValue> orders = new ArrayList<>();
+    		orders.add(item);
+        	  
+               ResultSet rs = session.execute(updateorderStmt.bind( amount, location, orders, status, message,uid));
+               if(rs != null) {
+                     List<Row> rows =rs.all();
+                     if(rows != null) {
+                            for(Row row : rows) {
+                            	System.out.println("Printing value");
+                                   System.out.println(row);
+                            }
+                     }
+               }
+        } catch(Exception e) {
+               System.out.println("Exception in delete Stament"+e.getMessage());
+        }
+ }
      
 	
      
@@ -98,18 +135,42 @@ public class ConnectionUtil {
      
 	
 	public static void main(String[] args) {
-
+System.out.println("In main method");
 		String order_id = UUID.randomUUID().toString() ;
 		
 		
 		ConnectionUtil cu = new ConnectionUtil();
 		
+		
+		
 		//cu.retriveValues();
 		//cu.retriveValue(UUID.fromString("e7ae5cf3-d358-4d99-b900-85902fda9bb0"));
 		//cu.insertValues();
+		UserType oderItemType = cu.cluster.getMetadata().getKeyspace(cu.session.getLoggedKeyspace()).getUserType("order_items");
 		
+		
+		UDTValue orderItem = oderItemType.newValue()
+		        .setInt("qty", 2)
+		        .setString("name", "mocha")
+		        .setString("milk_type", "whole")
+		        .setString("size", "small")
+		        .setDecimal("price", new BigDecimal(2.5));
+		
+		List<UDTValue> orders = new ArrayList<>();
+		orders.add(orderItem);
 		// Connect to the cluster and keyspace "library"
 	   
+		//PreparedStatement insertorderPstmt = cu.session.prepare("insert into restbucks.restbucks_order(order_id,amount,location,items,status,message) values(?, ?, ?, ?, ?, ?)");
+		//cu.session.execute(insertorderPstmt.bind(UUID.randomUUID(), new BigDecimal("4"), "Santa Clara", orders, "PLACED", "in process"));
+		//cu.retriveValues();
+		//System.out.println("Deleting values");
+		//cu.removeValue(UUID.fromString("3da49db9-aea2-4fd7-b39e-5dc68c7499a9"));
+		//cu.retriveValues();
+		
+		
+		cu.updateValue(UUID.fromString("e7ae5cf3-d358-4d99-b900-85902fda9bb0"),new BigDecimal("3"),"San Jose improve 3rd st", orderItem, "Updated","in process");
+		System.out.println("after update");
+	
 		
 		//e7ae5cf3-d358-4d99-b900-85902fda9bb0 
 		
