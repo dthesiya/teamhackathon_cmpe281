@@ -4,7 +4,7 @@ var uuid = cassandra.types.Uuid;
 const querystring = require('querystring');
 
 
-exports.createOrder = function(order,callback) {
+exports.placeOrder = function(order,callback) {
 
 	var id = uuid.random();
     // var query = "INSERT INTO restbucks_order (order_id, amount, location, status, message, items) VALUES ("+id+","+order.amount+",'"+order.location+"','"+order.status+"','"+order.message+"',"+order.items+")";
@@ -12,11 +12,20 @@ exports.createOrder = function(order,callback) {
     // var params= [id,order.amount,order.location,order.status,order.message,order.items]
    	order.order_id = id;
 	contactpoint.execute(query,[JSON.stringify(order)],{ prepare: true },function(err,result){
+		response = {};
 		console.log("err " + err);
-		if(err)
-			callback("Can not insert order");
-		else
-			callback(result);
+		if(err){
+			response.status = 400;
+			response.message = "Error occured when creating order";
+			response.error = err;
+			callback(response);
+		}
+		else {
+			response.status = 200;
+			response.id = result.id;
+			response.message = "Order Placed";
+			callback(response);
+		}
 	});
 };
 
@@ -24,29 +33,75 @@ exports.updateOrder = function(order,callback) {
 	 var query = "INSERT INTO restbucks_order JSON ?" ;
     // var params= [id,order.amount,order.location,order.status,order.message,order.items]
 	contactpoint.execute(query,[JSON.stringify(order)],{ prepare: true },function(err,result){
-		if(err)
-			callback("Can update order");
+		response = {};
+		if(err) {
+			response.status = 400;
+			response.message = "Error occured when updating a order";
+			response.error = err;
+			callback(response);
+		}
 		else
-			callback(result);
+			response.status = 200;
+			response.id = result.id;
+			response.message = "Order Updated";
+			callback(response);
 	});
 };
 
-exports.deleteOrder = function(id,callback){
+exports.cancelOrder = function(id,callback){
 	var query = "DELETE FROM restbucks_order WHERE order_id = "+id+""; 
 	contactpoint.execute(query,function(err,result){
-		if(err)
-			callback("Can delete order");
-		else
-			callback(result);
+		response = {};
+		if(err){
+			response.status = 400;
+			response.message = "Error occured when deleting a order";
+			response.error = err;
+			callback(response);
+		}
+		else{
+			response.status = 200;
+			response.id = id;
+			response.message = result;
+			callback(response);
+		}
+			
 	});
 };
 
-exports.viewOrders = function(callback){
+exports.getOrders = function(callback){
 	var query = "SELECT * FROM 	restbucks_order";
 	contactpoint.execute(query,function(err,result){
-		if(err)
-			callback("Can not get orders");
-		else
-			callback(result);
+		response = {};
+		if(err){
+			response.status = 400;
+			response.message = "Error occured when Getting a orders";
+			response.error = err;
+			callback(response);
+		}
+		else{
+			response.status = 200;
+			response.message = "List of Orders";
+			response.orders = result.rows;
+			callback(response);
+		}
+	});
+};
+
+exports.getOrderById = function(id,callback){
+	var query = "SELECT * FROM 	restbucks_order WHERE order_id = "+id+"";
+	contactpoint.execute(query,function(err,result){
+		response = {};
+		if(err){
+			response.status = 400;
+			response.message = "Error occured when Getting a orders";
+			response.error = err;
+			callback(response);
+		}
+		else{
+			response.status = 200;
+			response.message = "List of Orders";
+			response.orders = result.rows;
+			callback(response);
+		}
 	});
 };

@@ -22,57 +22,59 @@ var order = {
 
 var order_items = [];
 
-//exports.placeOrder = function(req,res){
-	router.route('/placeorder')
+	// For placing an order
+	// Order details are expected in Request body
+
+	router.route('/place')
 		.post(function(req,res){
-			console.log('arrived placeorder');
+
+			console.log('arrived place');
 			
+			// Setting order variable from URL
+
 			order.amount = req.body.amount;
 			order.location = req.body.location;
 			order.status = req.body.status;
 			order.message = req.body.message;
-			for(var i = 0; i< req.body.items.length; i++)
-			{							
-				item.qty = req.body.items[i].qty;
-				item.name = req.body.items[i].name;
-				item.milk_type = req.body.items[i].milk_type;
-				item.size = req.body.items[i].size;
-				item.price =req.body.items[i].price;
+
+			for(var item of req.body.items) {							
 				order_items.push(item);
 			}				
 			order.items = order_items;
 
-			dbs.createOrder(order,function(result){
-				console.log(result);
+			// Calling database function placeOrder
+
+			dbs.placeOrder(order,function(result){
 				res.send(result);
 			});
-	
-			// console.log("order : ");
-			// console.log(order);	
 	});
 
-	router.route('/updateorder')
+	// For updating an order
+	// Order ID is parsed from URL
+
+	router.route('/update/:id')
 		.put(function(req,res){
-			console.log('arrived updateorder');
+			console.log('arrived update');
 			var items = [];
 			
-			order.order_id = req.body.order_id;
+			// Setting order variable from URL
+
+			order.order_id = req.params.id;
 			order.amount = req.body.amount;
 			order.location = req.body.location;
 			order.status = req.body.status;
 			order.message = req.body.message;
-			for(var i = 0; i< req.body.items.length; i++)
-			{							
-				item.qty = req.body.items[i].qty;
-				item.name = req.body.items[i].name;
-				item.milk_type = req.body.items[i].milk_type;
-				item.size = req.body.items[i].size;
-				item.price =req.body.items[i].price;
+
+			for(var item of req.body.items) {							
 				order_items.push(item);
-			}				
+			}
+
 			order.items = order_items;
 
+			//Calling database function placeOrder
+ 
 			dbs.updateOrder(order,function(result){
+				console.log("result is : " )
 				console.log(result);
 				res.send(result);
 			});
@@ -82,24 +84,46 @@ var order_items = [];
 
 		});
 
-	router.route('/deleteorder')
-		.delete(function(req,res){
-			console.log('arrived deleteorder');
-			
-			var id = req.body.id;
+	// For canceling an order 
+	// Order ID Is parsed from URL
 
-			dbs.deleteOrder(id,function(result){
+	router.route('/cancel/:id')
+		.delete(function(req,res){
+			console.log('arrived cancel order');
+			
+			var id = req.params.id;
+
+			dbs.cancelOrder(id,function(result){
 				console.log(result);
+				res.send(result);
 			
 			});
 		});	
 
-	router.route('/vieworders')
+	// For getting list of orders
+
+	router.route('/orders')
+		.get(function(req,res){
+
+			console.log('Arrived in orders');
+
+			dbs.getOrders(function(result){
+				console.log(result);
+				res.send(result);
+			});
+		});		
+
+	// For getting a particular order
+	// Order ID is parsed from URL
+
+	router.route('/order/:id')
 		.get(function(req,res){
 
 			console.log('Arrived in vieworders');
 
-			dbs.viewOrders(function(result){
+			var id = req.params.id;
+			
+			dbs.getOrderById(id,function(result){
 				console.log(result);
 				res.send(result);
 			});
