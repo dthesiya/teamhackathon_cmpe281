@@ -13,13 +13,13 @@ hackathonApp.config(function ($routeProvider) {
             templateUrl: "/orderDetails.ejs",
             controller: "orderController"
         })
-        .when("/patients", {
-            templateUrl: "patients.ejs",
-            controller: "patientsController"
+        .when("/edit", {
+            templateUrl: "editOrder.ejs",
+            controller: "orderController"
         })
-        .when("/files", {
-            templateUrl: "files.ejs",
-            controller: "filesController"
+        .when("/all", {
+            templateUrl: "allOrders.ejs",
+            controller: "allController"
         })
         .otherwise({
             templateUrl: "/placeOrder.ejs",
