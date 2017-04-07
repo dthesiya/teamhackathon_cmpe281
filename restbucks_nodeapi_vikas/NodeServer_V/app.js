@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var index = require('./routes/index');
+var users = require('./routes/users');
 var dao = require('./routes/dao');
 var order = require('./routes/order');
 
@@ -22,6 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', index);
+app.use('/users', users);
 
 //order.processOrder();
 
@@ -34,7 +38,7 @@ app.get('/order/:id',order.getOrderById);
 app.get('/orders',order.getOrders);
 
 //put
-app.put('/update',order.updateOrder);
+app.put('/update/:id',order.updateOrder);
 
 //delete
 app.delete('/cancel/:id',order.cancelOrder);
