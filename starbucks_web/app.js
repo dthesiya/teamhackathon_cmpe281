@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
+var order = require('./routes/order');
 
 var app = express();
 
@@ -24,6 +25,12 @@ app.use(express.static(path.join(__dirname, 'views')));
 
 app.get('/', index.getindex);
 app.get('/prices', index.getPrices);
+app.post('/order', order.placeOrder);
+app.get('/order/:orderId', order.orderDetails);
+app.put('/order/:orderId', order.updateOrder);
+app.put('/pay/:orderId', order.payOrder);
+app.delete('/order/:orderId', order.cancelOrder);
+app.get('/orders', order.getPrices);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
