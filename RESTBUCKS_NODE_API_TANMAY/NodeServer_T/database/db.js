@@ -17,15 +17,14 @@ exports.placeOrder = function(order,callback) {
 			response.status = 400;
 			response.message = "Error occured when creating order";
 			response.error = err;
-			callback(response);
 		}
 		else {
 			response.status = 200;
 			response.id = result.id;
 			response.message = "Order Placed";
 			response.stack = result;
-			callback(response);
 		}
+		callback(response);
 	});
 };
 
@@ -41,15 +40,14 @@ exports.updateOrder = function(order,callback) {
 			response.message = "Error occured when updating order";
 			response.error = err;
 			console.log(err);
-			callback(response);
 		}
 		else {
 			response.status = 200;
 			response.id = result.id;
 			response.message = "Order Updated";
 			response.stack = result;
-			callback(response);
 		}
+		callback(response);
 	});
 };
 
@@ -61,15 +59,13 @@ exports.cancelOrder = function(id,callback){
 			response.status = 400;
 			response.message = "Error occured when deleting a order";
 			response.error = err;
-			callback(response);
 		}
 		else{
 			response.status = 200;
 			response.id = id;
 			response.message = result;
-			callback(response);
 		}
-			
+		callback(response);	
 	});
 };
 
@@ -81,15 +77,14 @@ exports.getOrders = function(callback){
 			response.status = 400;
 			response.message = "Error occured when Getting a orders";
 			response.error = err;
-			callback(response);
 		}
 		else{
 			response.status = 200;
 			response.message = "List of Orders";
 			response.orders = result.rows;
 			response.stack = result;
-			callback(response);
 		}
+		callback(response);
 	});
 };
 
@@ -102,7 +97,6 @@ exports.getOrderById = function(id,callback){
 			response.status = 400;
 			response.message = "Error occured when Getting a orders";
 			response.error = err;
-			callback(response);
 		}
 		else if (result.rows.length == 0) {
 
@@ -110,7 +104,6 @@ exports.getOrderById = function(id,callback){
 			response.status = 404;
 			response.message = "No order found with requested ID";
 			response.stack = result;
-			callback(response);
 		}
 		else {
 			//console.log('Sending results');
@@ -118,8 +111,8 @@ exports.getOrderById = function(id,callback){
 			response.message = "List of Orders";
 			response.orders = result.rows;
 			response.stack = result;
-			callback(response);
 		}
+		callback(response);
 	});
 };
 
@@ -131,29 +124,41 @@ exports.pay = function(id,callback){
 			response.status = 400;
 			response.message = "Error occured when making a payment";
 			response.error = err;
-			callback(response);
 		}
 		else{
 			response.status = 200;
 			response.id = id;
 			response.message = "Payment Successful";
 			response.stack = result;
-			callback(response);
 		}
+		callback(response);
 	}); 
 };
 
 exports.updateStatus = function(id,status){
 	var query = "UPDATE restbucks_order SET status = '"+status+"' WHERE order_id = "+id+"";
 	console.log(query);
-	contactpoint.execute(query,function(err,result){
-		if(err){
-			console.log('Error occured when updating status');
-			console.log(err);
+	
+	var get_query = "SELECT status FROM restbucks_order WHERE order_id="+id+"";
+	contactpoint.execute(get_query,function(err,result){
+		if(err)
+		{
+			console.log('Error occured when getting the status');
+			console.log(err);		
 		}
-		else{
-			console.log('status updated to : ' + status + 'for ID : ' + id);
+		else
+		{
 			console.log(result);
+			contactpoint.execute(query,function(err,result){
+				if(err){
+					console.log('Error occured when updating status');
+					console.log(err);
+				}
+				else{
+					console.log('status updated to : ' + status + 'for ID : ' + id);
+					console.log(result);
+				}
+			});
 		}
-	}); 
+	});	 
 };
