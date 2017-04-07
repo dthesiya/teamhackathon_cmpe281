@@ -1,18 +1,12 @@
-<div id="placeorder" ng-controller="orderController" ng-init="">
-    <form class="container" id="myForm" ng-submit="placeOrder()">
+<div id="editorder" ng-controller="orderController" ng-init="getOrderDetails()">
+    <form class="container" id="myForm" ng-submit="updateOrder()">
         <div class="panel panel-info">
             <div class="panel-heading">Order</div>
             <div class="panel-body">
                 <div class="row top-buffer">
-                    <div class="col-md-2">
-                        <h3 style="display: inline">Order from:</h3>
-                    </div>
-                    <div class="col-md-4">
-                        <select class="selectpicker" id="location" name="location">
-                            <option value="San Jose" selected>San Jose</option>
-                            <option value="Santa Clara">Santa Clara</option>
-                            <option value="Sunnyvale">Sunnyvale</option>
-                        </select>
+                    <div class="col-md-6">
+                        <h4 style="display: inline">Order from: </h4>
+                        <h3 style="display: inline"> {{order.location}}</h3>
                     </div>
                 </div>
                 <div class="row top-buffer">
@@ -31,32 +25,32 @@
                         </tr>
                         </thead>
                         <tbody id="form">
-                        <tr class='Box divbutton'>
+                        <tr class='Box divbutton' ng-repeat="item in order.items">
                             <td class="text-center">
-                                <select class="dropdown" id="coffee" name="name">
+                                <select class="dropdown" id="coffee" name="name" ng-model="item.name">
                                     <option value="mocha">Mocha</option>
                                     <option value="tea">Tea</option>
                                     <option value="cappuccino">Cappuccino</option>
                                 </select>
                             </td>
                             <td class="text-center">
-                                <input required name="qty" maxlength="2" class="form-control input-sm" id="inputsm" type="number">
+                                <input required name="qty" maxlength="2" ng-model="item.qty" class="form-control input-sm" id="inputsm" type="number"/>
                             </td>
                             <td class="text-center">
-                                <select class="dropdown" id="milk" name="milk_type">
+                                <select class="dropdown" id="milk" name="milk_type"  ng-model="item.milk_type">
                                     <option value="whole">Whole</option>
                                     <option value="latte">Latte</option>
                                     <option>Soy</option>
                                 </select>
                             </td>
                             <td class="text-center">
-                                <select class="dropdown" id="size" onchange="sizeChanged(this)" name="size">
+                                <select class="dropdown"  ng-model="item.size" id="size" onchange="sizeChanged(this)" name="size">
                                     <option value="small" selected>Small</option>
                                     <option value="medium">Medium</option>
                                     <option value="large">large</option>
                                 </select>
                             </td>
-                            <td class="text-center"><label for="myvalue">$ {{prices.small}}</label></td>
+                            <td class="text-center"><label for="myvalue">$ {{prices[item.size]}}</label></td>
                             <td>
                     <span type="button" class="remove glyphicon glyphicon-remove-sign" style="color:red"
                           onclick="$(this).parent().parent().remove();"></span>
@@ -66,7 +60,7 @@
                     </table>
                 </div>
                 <div class="panel-footer text-center">
-                        <button class="btn btn-primary" type="submit">Place Order</button>
+                    <button class="btn btn-primary" type="submit">Update Order</button>
                 </div>
             </div>
         </div>
