@@ -19,14 +19,14 @@ public class PaymentResource extends ServerResource {
         if ( order == null ) { //exception handling
             setStatus( org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND ) ;
             api.Status api = new api.Status() ; 
-            api.status = "error" ;
+            api.status = "404" ;
             api.message = "Order Not Found" ;
             return new JacksonRepresentation<api.Status>(api) ;
         }
         if ( order != null && order.status != RestbucksAPI.OrderStatus.PLACED ) { // Payment cannot be done as it has already been paid for
             setStatus( org.restlet.data.Status.CLIENT_ERROR_PRECONDITION_FAILED ) ;
             api.Status api = new api.Status() ;
-            api.status = "error" ;
+            api.status = "404" ;
             api.message = "Order Payment Rejected! Order already paid for" ;
             return new JacksonRepresentation<api.Status>(api) ;
         }
@@ -34,7 +34,12 @@ public class PaymentResource extends ServerResource {
             order.order_id = order_id ;
             RestbucksAPI.setOrderStatus( order, getReference().toString(), RestbucksAPI.OrderStatus.PAID ) ;
             RestbucksAPI.updateOrder( order.order_id, order ) ; 
-            return new JacksonRepresentation<Order>(order) ;           
+            JSONObject json = new JSONObject();
+            json.put("status", "200");
+            json.put("order_id", order.getOrder_id());
+            Representation resp = new JsonRepresentation(json);
+            return resp ; //send response to client
+           // return new JacksonRepresentation<Order>(order) ;           
         }
 
     }

@@ -1,5 +1,6 @@
 package api ;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList ;
 import java.util.HashMap;
@@ -8,7 +9,7 @@ import java.util.Random ;
 import java.util.UUID ;
 import java.util.concurrent.ConcurrentHashMap ;
 
-class Order {
+class Order implements Serializable{
 
 	public String order_id = UUID.randomUUID().toString() ; // generate unique id for orders
 	public String location ;   // Which of the RESTBUCKS store is this order for? eg. San Jose, San Francisco, Los Angeles
