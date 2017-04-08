@@ -114,7 +114,7 @@ exports.getOrders = function (req, res) {
 
 exports.updateOrder = function (req, res) {
 
-    var id = req.body.id;
+    var id = req.params.id;
     dao.client.execute(config.queries.get_orderby_id, [id], {prepare: true}, function (err, result) {
         var response = {};
         if(err){
