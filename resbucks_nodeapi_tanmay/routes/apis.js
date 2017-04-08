@@ -30,15 +30,15 @@ var orderQueue = async.queue(function(id,callback){
 
 	setTimeout(function(){
 		console.log(id);
-		dbs.updateStatus(id,'PREPARING');
+		dbs.updateStatus(id);
 	},5000);
 
 	setTimeout(function(){
-		dbs.updateStatus(id,'SERVED');
+		dbs.updateStatus(id);
 	},25000);
 
 	setTimeout(function(){
-		dbs.updateStatus(id,'COLLECTED');
+		dbs.updateStatus(id);
 		callback();
 	},35000);
 
@@ -72,13 +72,14 @@ var orderQueue = async.queue(function(id,callback){
 
 			dbs.placeOrder(order,function(result){
 				res.send(result);
+				res.end();
 			});
 	});
 
 	// For updating an order
 	// Order ID is parsed from URL
 
-	router.route('/update')
+	router.route('/update/:id')
 		.put(function(req,res){
 
 			console.log('arrived in Update');
@@ -86,27 +87,41 @@ var orderQueue = async.queue(function(id,callback){
 			
 			// Setting order variable from URL
 
-			order.order_id = req.body.order_id;
+			order.order_id = req.params.id;
 			var id = order.order_id;
 			dbs.getOrderById(id,function(result){
 				
-				if(result.status == 404 || result.status == 400)
+				if(result.status == 404 || result.status == 400) {
 					res.send(result);
+					res.end();
+				}
 				else {
-					order.amount = req.body.amount;
-					order.location = req.body.location;
-					order.message = req.body.message;
-			
-					for(var item of req.body.items) {							
-						order_items.push(item);
-					}				
-					order.items = order_items;
-	
-					// Calling database function placeOrder
+					console.log('result is :');
+					console.log(result);
+					if(result.orders.status == 'PLACED') {
+						order.amount = req.body.amount;
+						order.location = req.body.location;
+						order.status = 'PLACED';
+						order.message = req.body.message;
+				
+						for(var item of req.body.items) {							
+							order_items.push(item);
+						}				
+						order.items = order_items;
 		
-					dbs.updateOrder(order,function(result){
+						// Calling database function placeOrder
+			
+						dbs.updateOrder(order,function(result){
+							res.send(result);
+							res.end();
+						});
+					}
+					else {
+						result.status = 400;
+						result.err = "Cannot update order after payment";
 						res.send(result);
-					});
+						res.end();
+					}
 				}
 			});
 	});
@@ -125,11 +140,19 @@ var orderQueue = async.queue(function(id,callback){
 				if(result.status == 404 || result.status == 400)
 					res.send(result);
 				else {
-					console.log('Deleting the order');
-					dbs.cancelOrder(id,function(result){
-					console.log(result);
-					res.send(result);
-					});
+					if(result.orders.status == 'PLACED') {
+						console.log('Deleting the order');
+						dbs.cancelOrder(id,function(result){
+						console.log(result);
+						res.send(result);
+						res.end();
+						});
+					}else {
+						result.status = 400;
+						result.err = "Cannot cancel order after payment";
+						res.send(result);
+						res.end();
+					}
 				}
 			});
 		});	
