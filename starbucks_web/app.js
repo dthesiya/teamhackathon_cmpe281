@@ -15,7 +15,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'starbucks.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -30,7 +30,7 @@ app.get('/order/:orderId', order.orderDetails);
 app.put('/order/:orderId', order.updateOrder);
 app.put('/pay/:orderId', order.payOrder);
 app.delete('/order/:orderId', order.cancelOrder);
-app.get('/orders', order.getPrices);
+app.get('/orders', order.getAllOrders);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
