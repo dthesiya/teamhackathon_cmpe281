@@ -3,6 +3,7 @@ var router = express.Router();
 
 var async = require('async');
 var dbs = require('../database/db');
+const messages = require('./messages');
 
 var item = {
 				qty : {},
@@ -30,15 +31,15 @@ var orderQueue = async.queue(function(id,callback){
 
 	setTimeout(function(){
 		console.log(id);
-		dbs.updateStatus(id,'PREPARING');
+		dbs.updateStatus(id);
 	},5000);
 
 	setTimeout(function(){
-		dbs.updateStatus(id,'SERVED');
+		dbs.updateStatus(id);
 	},25000);
 
 	setTimeout(function(){
-		dbs.updateStatus(id,'COLLECTED');
+		dbs.updateStatus(id);
 		callback();
 	},35000);
 
@@ -78,7 +79,7 @@ var orderQueue = async.queue(function(id,callback){
 	// For updating an order
 	// Order ID is parsed from URL
 
-	router.route('/update')
+	router.route('/update/:id')
 		.put(function(req,res){
 
 			console.log('arrived in Update');
@@ -86,27 +87,38 @@ var orderQueue = async.queue(function(id,callback){
 			
 			// Setting order variable from URL
 
-			order.order_id = req.body.order_id;
+			order.order_id = req.params.id;
 			var id = order.order_id;
 			dbs.getOrderById(id,function(result){
 				
 				if(result.status == 404 || result.status == 400)
 					res.send(result);
 				else {
-					order.amount = req.body.amount;
-					order.location = req.body.location;
-					order.message = req.body.message;
-			
-					for(var item of req.body.items) {							
-						order_items.push(item);
-					}				
-					order.items = order_items;
-	
-					// Calling database function placeOrder
+					console.log("the result i got ");
+					console.log(result);
+					if(result.orders[0].status == 'PLACED') {
+						order.amount = req.body.amount;
+						order.location = req.body.location;
+						order.status = 'PLACED';
+						order.message = req.body.message;
+				
+						for(var item of req.body.items) {							
+							order_items.push(item);
+						}				
+						order.items = order_items;
 		
-					dbs.updateOrder(order,function(result){
+						// Calling database function placeOrder
+			
+						dbs.updateOrder(order,function(result){
+							res.send(result);
+						});
+					}
+					else {
+
+						result.status = 400;
+						result.err =  "Can't update order.Requested order is already in progress";
 						res.send(result);
-					});
+					}
 				}
 			});
 	});
@@ -125,11 +137,19 @@ var orderQueue = async.queue(function(id,callback){
 				if(result.status == 404 || result.status == 400)
 					res.send(result);
 				else {
+					if(result.orders[0].status == 'PLACED') {
 					console.log('Deleting the order');
 					dbs.cancelOrder(id,function(result){
 					console.log(result);
 					res.send(result);
 					});
+					}
+					else {
+
+						result.status = 400;
+						result.err =  'Can\'t cancel order after Payment';
+						res.send(result);
+					}
 				}
 			});
 		});	
