@@ -3,6 +3,8 @@ var router = express.Router();
 
 var async = require('async');
 var dbs = require('../database/db');
+var  reply = require('../reply.js');
+
 
 var item = {
 				qty : {},
@@ -117,7 +119,7 @@ var orderQueue = async.queue(function(id,callback){
 						});
 					}
 					else {
-						result.status = 400;
+						result.status = reply.error_status;
 						result.err = "Cannot update order after payment";
 						res.send(result);
 						res.end();
@@ -137,8 +139,10 @@ var orderQueue = async.queue(function(id,callback){
 
 			dbs.getOrderById(id,function(result){
 				
-				if(result.status == 404 || result.status == 400)
+				if(result.status == reply.error_status) {
 					res.send(result);
+					res.end();
+				}
 				else {
 					if(result.orders.status == 'PLACED') {
 						console.log('Deleting the order');
@@ -148,8 +152,8 @@ var orderQueue = async.queue(function(id,callback){
 						res.end();
 						});
 					}else {
-						result.status = 400;
-						result.err = "Cannot cancel order after payment";
+						result.status = reply.error_status;
+						result.err = reply.message.err_calcelPaid;
 						res.send(result);
 						res.end();
 					}
@@ -169,6 +173,8 @@ var orderQueue = async.queue(function(id,callback){
 			dbs.getOrders(function(result){
 				console.log(result);
 				res.send(result);
+				res.end();
+
 			});
 		});		
 
@@ -186,6 +192,7 @@ var orderQueue = async.queue(function(id,callback){
 			dbs.getOrderById(id,function(result){
 				console.log(result);
 				res.send(result);
+				res.end();
 			});
 		});	
 
@@ -199,14 +206,26 @@ var orderQueue = async.queue(function(id,callback){
 			// Calling database function Payment
 			dbs.getOrderById(id,function(result){
 				
-				if(result.status == 404 || result.status == 400)
+				if(result.status == 404 || result.status == 400){
 					res.send(result);
+					res.end();
+				}
 				else {
-					dbs.pay(id,function(result){
-						orderQueue.push(id);
-						console.log(result);
+					if(result.orders.status == 'PLACED') {
+						console.log('Making payment');
+						dbs.pay(id,function(result){
+							orderQueue.push(id);
+							console.log(result);
+							res.send(result);
+							res.end();
+						});
+					}
+					else {
+						result.status = reply.error_status;
+						result.err = reply.message.err_paidAlready;
 						res.send(result);
-					});
+						res.end();
+					}
 				}
 			});
 		});	
