@@ -31,14 +31,15 @@ config.queries.update_status = "UPDATE restbucks_order SET status=? where order_
 
 
 config.message = {};
-config.message.err_place = "Error in placing new order";
-config.message.err_getOrderById = "Error in getting requested order";
-config.message.err_getOrders = "Error in getting all orders";
-config.message.err_update = "Error in updating requested order";
-config.message.err_cancel = "Error in canceling requested order";
-config.message.err_pay = "Error in paying requested order";
-config.message.err_update_paid = "Can't update order.Requested order is already in progress";
-config.message.err_cancel_paid = "Can't cancel order.Requested order is already in progress";
+config.message.err_place = "Sorry could not place order";
+config.message.err_getOrderById = "Order not found";
+config.message.err_getOrders = "Orders not found";
+config.message.err_update = "Order not found";
+config.message.err_cancel = "Order not found";
+config.message.err_pay = "Order not found";
+config.message.err_update_paid = "Order Update Rejected";
+config.message.err_cancel_paid = "Order Cancelling Rejected";
+config.message.err_pay_paid = "Order Payment Rejected! Order already paid for";
 
 config.message.success_place = "New order placed";
 config.message.success_update = "Requested order updated";

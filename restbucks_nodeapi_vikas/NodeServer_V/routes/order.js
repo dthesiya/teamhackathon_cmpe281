@@ -56,13 +56,12 @@ exports.placeOrder = function (req, res) {
     dao.client.execute(config.queries.place_order, [JSON.stringify(order)], {prepare: true}, function (err, result) {
         var response = {};
         if(err){
-            response.err = config.message.err_place;
+            response.message = config.message.err_place;
             response.status = config.responde_status.err;
         }
         if(result){
-            response.id = id;
+            response.order_id = id;
             response.status = config.responde_status.success;
-            response.success = config.message.success_place;
         }
         console.log(response);
         res.send(response);
@@ -77,11 +76,11 @@ exports.getOrderById = function (req, res) {
     dao.client.execute(config.queries.get_orderby_id, [req.params.id], {prepare: true}, function (err, result) {
         var response = {};
         if(err){
-            response.err = config.message.err_getOrderById;
+            response.message = config.message.err_getOrderById;
             response.status = config.responde_status.err;
         }
         if(result){
-            response.id = req.params.id;
+            response.order_id = req.params.id;
             response.status = config.responde_status.success;
             response.order = result.rows[0];
         }
@@ -97,7 +96,7 @@ exports.getOrders = function (req, res) {
     dao.client.execute(config.queries.get_orders, function (err, result) {
         var response = {};
         if(err){
-            response.err = config.message.err_place;
+            response.message = config.message.err_place;
             response.status = config.responde_status.err;
         }
         if(result){
@@ -118,7 +117,7 @@ exports.updateOrder = function (req, res) {
     dao.client.execute(config.queries.get_orderby_id, [id], {prepare: true}, function (err, result) {
         var response = {};
         if(err){
-            response.err = config.message.err_update;
+            response.message = config.message.err_update;
             response.status = config.responde_status.err;
             res.send(response);
             res.end();
@@ -140,20 +139,19 @@ exports.updateOrder = function (req, res) {
                 dao.client.execute(config.queries.update_order, [JSON.stringify(order)], {prepare: true}, function (err, result) {
                     response = {};
                     if(err){
-                        response.err = config.message.err_update;
+                        response.message = config.message.err_update;
                         response.status = config.responde_status.err;
                     }
                     if(result){
-                        response.id = id;
+                        response.order_id = id;
                         response.status = config.responde_status.success;
-                        response.success = config.message.success_update;
                     }
                     console.log(response);
                     res.send(response);
                     res.end();
                 });
             }else{
-                response.err = config.message.err_update_paid;
+                response.message = config.message.err_update_paid;
                 response.status = config.responde_status.err;
                 res.send(response);
                 res.end();
@@ -170,7 +168,7 @@ exports.cancelOrder = function (req, res) {
     dao.client.execute(config.queries.get_orderby_id, [req.params.id], {prepare: true}, function (err, result) {
         var response = {};
         if(err){
-            response.err = config.message.err_cancel;
+            response.message = config.message.err_cancel;
             response.status = config.responde_status.err;
             res.send(response);
             res.end();
@@ -180,20 +178,19 @@ exports.cancelOrder = function (req, res) {
                 dao.client.execute(config.queries.cancel_order, [req.params.id], {prepare: true}, function (err, result) {
                     var response = {};
                     if(err){
-                        response.err = config.message.err_cancel;
+                        response.message = config.message.err_cancel;
                         response.status = config.responde_status.err;
                     }
                     if(result){
-                        response.id = req.params.id;
+                        response.order_id = req.params.id;
                         response.status = config.responde_status.success;
-                        response.success = config.message.success_cancel;
                     }
                     console.log(response);
                     res.send(response);
                     res.end();
                 });
             }else{
-                response.err = config.message.err_cancel_paid;
+                response.message = config.message.err_cancel_paid;
                 response.status = config.responde_status.err;
                 res.send(response);
                 res.end();
@@ -206,22 +203,41 @@ exports.cancelOrder = function (req, res) {
 
 exports.payOrder = function (req, res) {
 
-    dao.client.execute(config.queries.pay_order, [config.orderStatus.paid, req.params.id], {prepare: true}, function (err, result) {
+    var id = req.params.id;
+    dao.client.execute(config.queries.get_orderby_id, [id], {prepare: true}, function (err, result) {
         var response = {};
         if(err){
-            response.err = config.message.err_pay;
+            response.message = config.message.err_pay;
             response.status = config.responde_status.err;
+            res.send(response);
+            res.end();
         }
         if(result){
-            q.push(req.params.id);
-            response.id = req.params.id;
-            response.status = config.responde_status.success;
-            response.success = config.message.success_pay;
+            if(result.rows[0].status === config.orderStatus.placed ){
+
+                dao.client.execute(config.queries.pay_order, [config.orderStatus.paid, id], {prepare: true}, function (err, result) {
+                    var response = {};
+                    if(err){
+                        response.message = config.message.err_pay;
+                        response.status = config.responde_status.err;
+                    }
+                    if(result){
+                        q.push(req.params.id);
+                        response.order_id = req.params.id;
+                        response.status = config.responde_status.success;
+                    }
+                    console.log(response);
+                    res.send(response);
+
+                });
+            }else{
+                response.message = config.message.err_pay_paid;
+                response.status = config.responde_status.err;
+                res.send(response);
+                res.end();
+            }
         }
-        console.log(response);
-        res.send(response);
 
     });
-
 };
 
