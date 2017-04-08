@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID ;
 
+
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.Session;
+
+import api.RestbucksAPI.OrderStatus;
 
 
 
@@ -47,53 +50,173 @@ public class ConnectionUtil {
 	 
  }
 	
-	public void insertValues() {
+	public void insertValues(api.Order order) {
+		List<UDTValue> orders = new ArrayList<>();
+		UserType oderItemType = cluster.getMetadata().getKeyspace(session.getLoggedKeyspace()).getUserType("order_items");
+		System.out.println("before loop");
+		for (Object obj : order.getItems())  
+		{
+			System.out.println("printing type:"+obj.getClass().getName());
+			api.OrderItem item = (OrderItem) obj;
+			System.out.println("inside loop");
+		UDTValue orderItem = oderItemType.newValue()
+		        .setInt("qty", item.getQty())
+		        .setString("name", item.getName())
+		        .setString("milk_type", item.getMilk_type())
+		        .setString("size", item.getSize())
+		        .setDecimal("price", BigDecimal.valueOf(item.getPrice()));
+		
+		
+		orders.add(orderItem);
+		}
 		System.out.println("Inserting");
 		
 		
 		
-        session.execute(insertorderPstmt.bind(UUID.randomUUID(),new BigDecimal("4"),"Santa Clara","[{qty:2,name:'mocha',milk_type:'whole',size:'small',price:2.5}]","PLACED","in process"));
+        session.execute(insertorderPstmt.bind(UUID.fromString(order.getOrder_id()),new BigDecimal(order.getAmount()),order.getLocation(),orders,order.getStatus().toString(),order.getMessage()));
         System.out.println("Succesfully inserted the data in cassandra table");
  }
 	
-	public void retriveValues() {
+	public ArrayList<api.Order> retriveValues() {
+		ArrayList<api.Order> existing_orders = new ArrayList<>();
+		api.Order result = new api.Order();
+		String status = null;
+		
         try {
                ResultSet rs = session.execute(selectallorderStmt.bind());
                if(rs != null) {
                      List<Row> rows =rs.all();
                      if(rows != null) {
                             for(Row row : rows) {
+                            	
+                            	result.setOrder_id(row.getUUID("order_id").toString());
+                            	result.setAmount(row.getDecimal("amount").doubleValue());
+                            	
+                            	List<UDTValue> mylist = row.getList("items", UDTValue.class);
+                            	List<OrderItem> ordritmlist = new ArrayList<OrderItem>();
+                            	
+                            	for(UDTValue val : mylist){
+                            		OrderItem item = new OrderItem();
+                            		item.setQty(val.getInt("qty"));
+                            		item.setName(val.getString("name"));
+                            		item.setMilk_type(val.getString("milk_type"));
+                            		item.setSize(val.getString("size"));
+                            		item.setPrice((val.getDecimal(("price")).doubleValue()));
+                            		ordritmlist.add(item);
+                            	}
+                            	result.setItems(ordritmlist);
+                                
+                            	//result.setItems(row.getList("items", UDTValue.class));
+                            	
+                            	result.setLocation(row.getString("location"));
+                            	result.setMessage(row.getString("message"));
+                            	status= row.getString("status");
+                            	
+                            	switch(status)
+                            	{
+                            	case "PLACED":
+                            		result.setStatus(OrderStatus.PLACED) ;
+                            		break;
+                            	case "PAID":
+                            		result.setStatus(OrderStatus.PAID);
+                            		break;
+                            	case "PREPARING":
+                            		result.setStatus(OrderStatus.PREPARING);
+                            		break;
+                            	case "SERVED":
+                            		result.setStatus(OrderStatus.SERVED);
+                            		break;
+                            	case "COLLECTED":
+                            		result.setStatus(OrderStatus.COLLECTED);
+                            		break;
+                            		default :
+                            			result.setStatus(OrderStatus.PLACED);
+                            			
+                            	}
+                            	
+                            	existing_orders.add(result);
+                            	
+                            	
                             	System.out.println("Printing all rows");
                                    System.out.println(row);
                             }
                      }
                }
         } catch(Exception e) {
-               System.out.println("Exception in select Stament"+e.getMessage());
+               System.out.println("Exception in select Stament for all orders"+e.getMessage());
         }
+        return existing_orders;
  }
 	
-	public void retriveValue(UUID uid) {
-        try {
-        	  
-               ResultSet rs = session.execute(selectorderbyidStmt.bind(uid));
+	public api.Order retriveValue(UUID uid) {
+		
+		api.Order result = new api.Order();
+		String status = null;
+		
+        try {      	
+        	  ResultSet rs = session.execute(selectorderbyidStmt.bind(uid));
                if(rs != null) {
                      List<Row> rows =rs.all();
                      if(rows != null) {
                             for(Row row : rows) {
+                            	
+                            	result.setOrder_id(row.getUUID("order_id").toString());
+                            	result.setAmount(row.getDecimal("amount").doubleValue());
+                  	
+                            	List<UDTValue> mylist = row.getList("items", UDTValue.class);
+                            	List<OrderItem> ordritmlist = new ArrayList<OrderItem>();
+                            	
+                            	for(UDTValue val : mylist){
+                            		OrderItem item = new OrderItem();
+                            		item.setQty(val.getInt("qty"));
+                            		item.setName(val.getString("name"));
+                            		item.setMilk_type(val.getString("milk_type"));
+                            		item.setSize(val.getString("size"));
+                            		item.setPrice((val.getDecimal(("price")).doubleValue()));
+                            		ordritmlist.add(item);
+                            	}
+                            	result.setItems(ordritmlist);
+                            	result.setLocation(row.getString("location"));
+                            	result.setMessage(row.getString("message"));
+                            	status= row.getString("status");
+                            	
+                            	switch(status)
+                            	{
+                            	case "PLACED":
+                            		result.setStatus(OrderStatus.PLACED) ;
+                            		break;
+                            	case "PAID":
+                            		result.setStatus(OrderStatus.PAID);
+                            		break;
+                            	case "PREPARING":
+                            		result.setStatus(OrderStatus.PREPARING);
+                            		break;
+                            	case "SERVED":
+                            		result.setStatus(OrderStatus.SERVED);
+                            		break;
+                            	case "COLLECTED":
+                            		result.setStatus(OrderStatus.COLLECTED);
+                            		break;
+                            		default :
+                            			result.setStatus(OrderStatus.PLACED);
+                            			
+                            	}
                             	System.out.println("Printing value");
-                                   System.out.println(row);
+                                  System.out.println(row);
+                                   
                             }
                      }
                }
+               
         } catch(Exception e) {
                System.out.println("Exception in select Stament"+e.getMessage());
         }
+		return result;
  }
-	public void removeValue(UUID uid) {
+	public void removeValue(String uid) {
         try {
         	  
-               ResultSet rs = session.execute(deleteorderStmt.bind(uid));
+               ResultSet rs = session.execute(deleteorderStmt.bind(UUID.fromString(uid)));
                if(rs != null) {
                      List<Row> rows =rs.all();
                      if(rows != null) {
@@ -108,12 +231,25 @@ public class ConnectionUtil {
         }
  }
 	
-	public void updateValue(UUID uid, BigDecimal amount, String location,UDTValue item, String status, String message ) {
+	public void updateValue(String order_id,api.Order order ) {
         try {
         	List<UDTValue> orders = new ArrayList<>();
-    		orders.add(item);
+    		UserType oderItemType = cluster.getMetadata().getKeyspace(session.getLoggedKeyspace()).getUserType("order_items");
+    		
+    		for (api.OrderItem item : order.getItems())  
+    		{
+    		UDTValue orderItem = oderItemType.newValue()
+    		        .setInt("qty", item.getQty())
+    		        .setString("name", item.getName())
+    		        .setString("milk_type", item.getMilk_type())
+    		        .setString("size", item.getSize())
+    		        .setDecimal("price", BigDecimal.valueOf(item.getPrice()));
+    		
+    		
+    		orders.add(orderItem);
+    		}
         	  
-               ResultSet rs = session.execute(updateorderStmt.bind( amount, location, orders, status, message,uid));
+               ResultSet rs = session.execute(updateorderStmt.bind( new BigDecimal(order.getAmount()), order.getLocation(), orders, order.getStatus().toString(), order.getMessage(),UUID.fromString(order_id)));
                if(rs != null) {
                      List<Row> rows =rs.all();
                      if(rows != null) {
@@ -124,7 +260,7 @@ public class ConnectionUtil {
                      }
                }
         } catch(Exception e) {
-               System.out.println("Exception in delete Stament"+e.getMessage());
+               System.out.println("Exception in update Stament"+e.getMessage());
         }
  }
      
@@ -134,7 +270,7 @@ public class ConnectionUtil {
      
      
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 System.out.println("In main method");
 		String order_id = UUID.randomUUID().toString() ;
 		
@@ -146,18 +282,7 @@ System.out.println("In main method");
 		//cu.retriveValues();
 		//cu.retriveValue(UUID.fromString("e7ae5cf3-d358-4d99-b900-85902fda9bb0"));
 		//cu.insertValues();
-		UserType oderItemType = cu.cluster.getMetadata().getKeyspace(cu.session.getLoggedKeyspace()).getUserType("order_items");
 		
-		
-		UDTValue orderItem = oderItemType.newValue()
-		        .setInt("qty", 2)
-		        .setString("name", "mocha")
-		        .setString("milk_type", "whole")
-		        .setString("size", "small")
-		        .setDecimal("price", new BigDecimal(2.5));
-		
-		List<UDTValue> orders = new ArrayList<>();
-		orders.add(orderItem);
 		// Connect to the cluster and keyspace "library"
 	   
 		//PreparedStatement insertorderPstmt = cu.session.prepare("insert into restbucks.restbucks_order(order_id,amount,location,items,status,message) values(?, ?, ?, ?, ?, ?)");
@@ -168,7 +293,7 @@ System.out.println("In main method");
 		//cu.retriveValues();
 		
 		
-		cu.updateValue(UUID.fromString("e7ae5cf3-d358-4d99-b900-85902fda9bb0"),new BigDecimal("3"),"San Jose improve 3rd st", orderItem, "Updated","in process");
+		//cu.updateValue(UUID.fromString("e7ae5cf3-d358-4d99-b900-85902fda9bb0"),new BigDecimal("3"),"San Jose improve 3rd st", orderItem, "Updated","in process");
 		System.out.println("after update");
 	
 		
@@ -177,11 +302,11 @@ System.out.println("In main method");
 		//session.execute(ORDER_DATA_SELECT_STMT)
 		
 		//session.execute("INSERT INTO restbucks_order (order_id,amount,location,items,status,message) VALUES (e7ae5cf3-d358-4d99-b900-85902fda9bb0, 5, 'San Jose', [{qty:2,name:'mocha',milk_type:'whole',size:'small',price:2.5}], 'PLACED','order is in process');");
-		/*ResultSet results = session.execute("SELECT * FROM restbucks_order");
+		ResultSet results = session.execute("SELECT * FROM restbucks_order");
 		for (Row row : results) {
 
 			System.out.format("%s %s", row.getString("status"), row.getString("location"));
 
-			}*/
-	}
+			}
+	}*/
 }
