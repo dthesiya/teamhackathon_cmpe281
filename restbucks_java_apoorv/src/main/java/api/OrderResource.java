@@ -10,14 +10,21 @@ import org.restlet.data.Form ;
 import org.restlet.data.Header ;
 import org.restlet.data.Digest ;
 import org.restlet.util.Series ;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.restlet.ext.crypto.DigestUtils ;
 import java.io.IOException ;
+import java.util.List;
 
 public class OrderResource extends ServerResource {
 
     @Get
     public Representation get_action() throws JSONException {  // GET API to retrive a particular order
-
+    	
+    	System.out.println("Resource Get request called");
 
         //caching to check if the request has updated
         Series<Header> headers = (Series<Header>) getRequest().getAttributes().get("org.restlet.http.headers");
@@ -41,6 +48,7 @@ public class OrderResource extends ServerResource {
             return new JacksonRepresentation<api.Status>(api) ;   // send response with the order not found error
         }
         else {
+        	System.out.println("retriving order for get method");
             Order existing_order = RestbucksAPI.getOrder( order_id ) ; //get the individual order for the given order id.
             if ( order_id == null || order_id.equals("")  || existing_order == null ) {   // exception handling
                 setStatus( org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND ) ;
@@ -76,14 +84,18 @@ public class OrderResource extends ServerResource {
         JacksonRepresentation<Order> orderRep = new JacksonRepresentation<Order> ( rep, Order.class ) ;  // create order respresentation, map the given details or order in "rep" to a POJO of Order class. 
 
         Order order = orderRep.getObject() ; // get the pojo from above representation
+        ObjectMapper mapper = new ObjectMapper();
+        order.setItems(mapper.convertValue(order.getItems(), new TypeReference<List<OrderItem>>() {}));
         RestbucksAPI.setOrderStatus( order, getReference().toString(), RestbucksAPI.OrderStatus.PLACED ) ; // Set the order as Placed by default once client sends the request
         RestbucksAPI.placeOrder( order.order_id, order ) ;  // Process the order and store in database
 
         Representation result = new JacksonRepresentation<Order>(order) ; // creating a response representation to client
         try { 
                 System.out.println( "Text: " + result.getText() ) ; 
+                System.out.println("done");
                 String  hash = DigestUtils.toMd5 ( result.getText() ) ;
                 result.setTag( new Tag( hash ) ) ; //tagging the response for future caching
+                System.out.println("success");
                 return result ; //send response to client
         }
         catch ( IOException e ) { // exception handling
@@ -91,6 +103,7 @@ public class OrderResource extends ServerResource {
                 api.Status api = new api.Status() ;
                 api.status = "error" ;
                 api.message = "Server Error, Try Again Later." ;
+                System.out.println("error");
                 return new JacksonRepresentation<api.Status>(api) ;
         }
     }
@@ -101,8 +114,10 @@ public class OrderResource extends ServerResource {
 
         JacksonRepresentation<Order> orderRep = new JacksonRepresentation<Order> ( rep, Order.class ) ; // Represenation to store details sent by the client
         Order order = orderRep.getObject() ;  
-
+        ObjectMapper mapper = new ObjectMapper();
+        order.setItems(mapper.convertValue(order.getItems(), new TypeReference<List<OrderItem>>() {}));
         String order_id = getAttribute("order_id") ; // retrive orderid from the request
+       System.out.println("Retriving order for put method");
         Order existing_order = RestbucksAPI.getOrder( order_id ) ;
 
         if ( order_id == null || order_id.equals("")  || existing_order == null ) {  //exception handling
@@ -151,6 +166,7 @@ public class OrderResource extends ServerResource {
     public Representation delete_action (Representation rep) throws IOException { // API to Cancel the order
 
         String order_id = getAttribute("order_id") ; // get the order id from request.
+        System.out.println("Retriving order for Delete API");
         Order existing_order = RestbucksAPI.getOrder( order_id ) ; // retrive order if it exists
         
         if ( order_id == null || order_id.equals("")  || existing_order == null ) { // exception handling
