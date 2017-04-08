@@ -14,10 +14,16 @@
                             <option value="Sunnyvale">Sunnyvale</option>
                         </select>
                     </div>
+                    <div class="col-md-6 text-right">
+                        <button id="edit" class="btn btn-success" ng-click="allOrders()">All Orders</button>
+                    </div>
                 </div>
+                <hr/>
                 <div class="row top-buffer">
                     <div class="col-md-6 text-left"><h4>Build your order here</h4></div>
-                    <div class="col-md-6 text-right"><button id="add" class="btn btn-info" onclick="addRow('myTable')">Add Item</button></div>
+                    <div class="col-md-6 text-right">
+                        <button id="add" class="btn btn-info" onclick="addRow('myTable')">Add Item</button>
+                    </div>
                 </div>
                 <div class="table-responsive top-buffer">
                     <table class="table table-striped table-hover" id="myTable">
@@ -65,9 +71,9 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="panel-footer text-center">
-                        <button class="btn btn-primary" type="submit">Place Order</button>
-                </div>
+            </div>
+            <div class="panel-footer text-center clearfix">
+                <button class="btn btn-primary" type="submit">Place Order</button>
             </div>
         </div>
     </form>
