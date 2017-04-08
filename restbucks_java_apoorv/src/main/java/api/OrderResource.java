@@ -15,6 +15,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jdk.nashorn.internal.parser.JSONParser;
+
 import org.restlet.ext.crypto.DigestUtils ;
 import java.io.IOException ;
 import java.util.List;
@@ -64,12 +66,18 @@ public class OrderResource extends ServerResource {
                     String  hash = DigestUtils.toMd5 ( result.getText() ) ;  // generate hash for etagging
                     System.out.println( "Get Hash: " + hash ) ; //print hash
                     result.setTag( new Tag( hash ) ) ; // set the etag for this request to cache for future requests
-                    return result ;  //send response to client
+                    JSONObject json = new JSONObject();
+                    json.put("status", "200");
+                    json.put("order", new JSONObject(new ObjectMapper().writeValueAsString(existing_order)));
+                    Representation resp = new JsonRepresentation(json);
+                    return resp ; //send response to client
+                    
+                    //return result ;  //send response to client
                 }
                 catch ( IOException e ) {  //exception handling
                     setStatus( org.restlet.data.Status.SERVER_ERROR_INTERNAL ) ;
                     api.Status api = new api.Status() ;
-                    api.status = "error" ;
+                    api.status = "400" ;
                     api.message = "Server Error, Try Again Later." ;
                     return new JacksonRepresentation<api.Status>(api) ;
                 }
@@ -87,24 +95,33 @@ public class OrderResource extends ServerResource {
         ObjectMapper mapper = new ObjectMapper();
         order.setItems(mapper.convertValue(order.getItems(), new TypeReference<List<OrderItem>>() {}));
         RestbucksAPI.setOrderStatus( order, getReference().toString(), RestbucksAPI.OrderStatus.PLACED ) ; // Set the order as Placed by default once client sends the request
-        RestbucksAPI.placeOrder( order.order_id, order ) ;  // Process the order and store in database
+       
 
         Representation result = new JacksonRepresentation<Order>(order) ; // creating a response representation to client
         try { 
+        	 RestbucksAPI.placeOrder( order.order_id, order ) ;  // Process the order and store in database
                 System.out.println( "Text: " + result.getText() ) ; 
                 System.out.println("done");
                 String  hash = DigestUtils.toMd5 ( result.getText() ) ;
                 result.setTag( new Tag( hash ) ) ; //tagging the response for future caching
                 System.out.println("success");
-                return result ; //send response to client
+                JSONObject json = new JSONObject();
+                json.put("status", "200");
+                json.put("order_id", order.getOrder_id());
+                Representation resp = new JsonRepresentation(json);
+                return resp ; //send response to client
         }
-        catch ( IOException e ) { // exception handling
-                setStatus( org.restlet.data.Status.SERVER_ERROR_INTERNAL ) ;
-                api.Status api = new api.Status() ;
+        catch ( Exception e ) { // exception handling
+               // setStatus( org.restlet.data.Status.SERVER_ERROR_INTERNAL ) ;
+                System.out.println("In catch of order resource post");
+                api.RestbucksError myerror = new RestbucksError();
+                myerror.setErr("Sorry could not place order");
+                myerror.setStatus("404");
+               /* api.Status api = new api.Status() ;
                 api.status = "error" ;
                 api.message = "Server Error, Try Again Later." ;
-                System.out.println("error");
-                return new JacksonRepresentation<api.Status>(api) ;
+                System.out.println("error");*/
+                return new JacksonRepresentation<api.RestbucksError>(myerror) ;
         }
     }
 
@@ -124,7 +141,7 @@ public class OrderResource extends ServerResource {
 
             setStatus( org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND ) ;
             api.Status api = new api.Status() ;
-            api.status = "error" ;
+            api.status = "404" ;
             api.message = "Order not found." ;
 
             return new JacksonRepresentation<api.Status>(api) ;
@@ -134,7 +151,7 @@ public class OrderResource extends ServerResource {
 
             setStatus( org.restlet.data.Status.CLIENT_ERROR_PRECONDITION_FAILED ) ; 
             api.Status api = new api.Status() ;
-            api.status = "error" ;
+            api.status = "404" ;
             api.message = "Order Update Rejected." ;
 
             return new JacksonRepresentation<api.Status>(api) ;
@@ -150,12 +167,18 @@ public class OrderResource extends ServerResource {
                     System.out.println( "Text: " + result.getText() ) ; //caching  using etags
                     String  hash = DigestUtils.toMd5 ( result.getText() ) ;
                     result.setTag( new Tag( hash ) ) ;
-                    return result ;
+                    JSONObject json = new JSONObject();
+                    json.put("status", "200");
+                    json.put("order_id", order.getOrder_id());
+                    Representation resp = new JsonRepresentation(json);
+                    return resp ; //send response to client
+                    
+                  //  return result ;
             }
             catch ( IOException e ) { // exception handling
                     setStatus( org.restlet.data.Status.SERVER_ERROR_INTERNAL ) ;
                     api.Status api = new api.Status() ;
-                    api.status = "error" ;
+                    api.status = "404" ;
                     api.message = "Server Error, Try Again Later." ;
                     return new JacksonRepresentation<api.Status>(api) ;
             }
@@ -173,7 +196,7 @@ public class OrderResource extends ServerResource {
 
             setStatus( org.restlet.data.Status.CLIENT_ERROR_NOT_FOUND ) ;
             api.Status api = new api.Status() ;
-            api.status = "error" ;
+            api.status = "404" ;
             api.message = "Order not found." ;
 
             return new JacksonRepresentation<api.Status>(api) ;
@@ -183,7 +206,7 @@ public class OrderResource extends ServerResource {
 
             setStatus( org.restlet.data.Status.CLIENT_ERROR_PRECONDITION_FAILED ) ;
             api.Status api = new api.Status() ;
-            api.status = "error" ;
+            api.status = "404" ;
             api.message = "Order Cancelling Rejected." ;
 
             return new JacksonRepresentation<api.Status>(api) ;
@@ -191,7 +214,11 @@ public class OrderResource extends ServerResource {
         else {
 
             RestbucksAPI.removeOrder( order_id ) ; // cancel the order
-            return null ;    // response to client 
+            JSONObject json = new JSONObject();
+            json.put("status", "200");
+            json.put("order_id", existing_order.getOrder_id());
+            Representation resp = new JsonRepresentation(json);
+            return resp ; //send response to client;    
         }
 
     }

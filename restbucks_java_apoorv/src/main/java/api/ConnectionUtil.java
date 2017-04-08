@@ -72,8 +72,13 @@ public class ConnectionUtil {
 		System.out.println("Inserting");
 		
 		
-		
+		try {
         session.execute(insertorderPstmt.bind(UUID.fromString(order.getOrder_id()),new BigDecimal(order.getAmount()),order.getLocation(),orders,order.getStatus().toString(),order.getMessage()));
+		}
+		catch(Exception e)
+		{
+			System.out.println("exception caught in UTIL class");
+		}
         System.out.println("Succesfully inserted the data in cassandra table");
  }
 	

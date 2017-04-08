@@ -3,6 +3,7 @@ package api ;
 import java.util.concurrent.BlockingQueue ;
 import java.util.concurrent.LinkedBlockingQueue ;
 import java.util.concurrent.ConcurrentHashMap ;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection ;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
-public class RestbucksAPI {
+public class RestbucksAPI  implements Serializable{
 	 static ConnectionUtil myconn = new ConnectionUtil();
 
     public enum OrderStatus { PLACED, PAID, PREPARING, SERVED, COLLECTED  }
@@ -30,7 +31,7 @@ public class RestbucksAPI {
            
 
         } catch (Exception e) {
-        	
+        	System.out.println("exception caught in API class");
         	System.out.println(e);
         }
 
