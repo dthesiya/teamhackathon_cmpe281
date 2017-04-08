@@ -17,9 +17,13 @@ hackathonApp.config(function ($routeProvider) {
             templateUrl: "editOrder.ejs",
             controller: "orderController"
         })
+        .when("/status", {
+            templateUrl: "orderStatus.ejs",
+            controller: "orderController"
+        })
         .when("/all", {
             templateUrl: "allOrders.ejs",
-            controller: "allController"
+            controller: "orderController"
         })
         .otherwise({
             templateUrl: "/placeOrder.ejs",
