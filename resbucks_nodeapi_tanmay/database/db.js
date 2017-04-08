@@ -1,51 +1,51 @@
 var cassandra = require('cassandra-driver');
-var contactpoint = new cassandra.Client({contactPoints : ['192.168.99.100'], keyspace: 'restbucks'});
+var contactpoint = new cassandra.Client({contactPoints : ['127.0.0.2'], keyspace: 'restbucks'});
 var uuid = cassandra.types.Uuid;
-
-/******************
-Database CRUD operations functions are exported...
-******************/
-
-// Placing new order
+const querystring = require('querystring');
 
 exports.placeOrder = function(order,callback) {
 
 	var id = uuid.random();
+    // var query = "INSERT INTO restbucks_order (order_id, amount, location, status, message, items) VALUES ("+id+","+order.amount+",'"+order.location+"','"+order.status+"','"+order.message+"',"+order.items+")";
     var query = "INSERT INTO restbucks_order JSON ?" ;
+    // var params= [id,order.amount,order.location,order.status,order.message,order.items]
    	order.order_id = id;
 	contactpoint.execute(query,[JSON.stringify(order)],{ prepare: true },function(err,result){
 		response = {};
 		
 		if(err){
 			response.status = 400;
-			response.err = "Error in placing new order";
+			response.message = "Error occured when creating order";
+			response.error = err;
 		}
 		else {
 			response.status = 200;
-			response.id = id;
-			response.success = "New order placed";
-			//response.stack = result;
+			response.id = result.id;
+			response.message = "Order Placed";
+			response.stack = result;
 		}
 		callback(response);
 	});
 };
 
-//Updating existing order
-
 exports.updateOrder = function(order,callback) {
 
+    // var query = "INSERT INTO restbucks_order (order_id, amount, location, status, message, items) VALUES ("+id+","+order.amount+",'"+order.location+"','"+order.status+"','"+order.message+"',"+order.items+")";
     var query = "INSERT INTO restbucks_order JSON ?" ;
+    // var params= [id,order.amount,order.location,order.status,order.message,order.items]
 	contactpoint.execute(query,[JSON.stringify(order)],{ prepare: true },function(err,result){
 		response = {};
 		if(err){
 			response.status = 400;
-			response.err = "Error in updating requested order";
+			response.message = "Error occured when updating order";
+			response.error = err;
 			console.log(err);
 		}
 		else {
 			response.status = 200;
-			response.success = "Requested order updated";
-			//response.stack = result;
+			response.id = result.id;
+			response.message = "Order Updated";
+			response.stack = result;
 		}
 		callback(response);
 	});
@@ -57,12 +57,13 @@ exports.cancelOrder = function(id,callback){
 		response = {};
 		if(err){
 			response.status = 400;
-			response.err = "Error in getting all orders";
+			response.message = "Error occured when deleting a order";
+			response.error = err;
 		}
 		else{
 			response.status = 200;
 			response.id = id;
-			response.message = "Requested order cancelled";
+			response.message = result;
 		}
 		callback(response);	
 	});
@@ -74,12 +75,14 @@ exports.getOrders = function(callback){
 		response = {};
 		if(err){
 			response.status = 400;
-			response.err = "Error in getting all orders";
+			response.message = "Error occured when Getting a orders";
+			response.error = err;
 		}
 		else{
 			response.status = 200;
+			response.message = "List of Orders";
 			response.orders = result.rows;
-			//response.stack = result;
+			response.stack = result;
 		}
 		callback(response);
 	});
@@ -93,21 +96,21 @@ exports.getOrderById = function(id,callback){
 			console.log('error occured');
 			response.status = 400;
 			response.message = "Error occured when Getting a orders";
-			response.err = err;
+			response.error = err;
 		}
 		else if (result.rows.length == 0) {
 
 			console.log('zero rows');
 			response.status = 404;
 			response.message = "No order found with requested ID";
-			//response.stack = result;
+			response.stack = result;
 		}
 		else {
 			//console.log('Sending results');
 			response.status = 200;
-			response.message = "Order";
-			response.orders = result.rows[0];
-			//response.stack = result;
+			response.message = "List of Orders";
+			response.orders = result.rows;
+			response.stack = result;
 		}
 		callback(response);
 	});
@@ -120,21 +123,23 @@ exports.pay = function(id,callback){
 		if(err){
 			response.status = 400;
 			response.message = "Error occured when making a payment";
-			response.err = err;
+			response.error = err;
 		}
 		else{
 			response.status = 200;
 			response.id = id;
 			response.message = "Payment Successful";
-			//response.stack = result;
+			response.stack = result;
 		}
 		callback(response);
 	}); 
 };
 
-exports.updateStatus = function(id){
+exports.updateStatus = function(id,status){
+	var query = "UPDATE restbucks_order SET status = '"+status+"' WHERE order_id = "+id+"";
+	console.log(query);
+	
 	var get_query = "SELECT status FROM restbucks_order WHERE order_id="+id+"";
-	var status = '';
 	contactpoint.execute(get_query,function(err,result){
 		if(err)
 		{
@@ -143,18 +148,7 @@ exports.updateStatus = function(id){
 		}
 		else
 		{
-			if(result.rows[0].status == 'PAID') {
-				status = 'PREPARING';
-			}
-			if(result.rows[0].status == 'PREPARING') {
-				status = 'SERVED';
-			}
-			else if(result.rows[0].status == 'SERVED')
-			{
-				status = 'COLLECTED';
-			}
-			var query = "UPDATE restbucks_order SET status = '"+status+"' WHERE order_id = "+id+"";
-			console.log(query);
+			console.log(result);
 			contactpoint.execute(query,function(err,result){
 				if(err){
 					console.log('Error occured when updating status');
