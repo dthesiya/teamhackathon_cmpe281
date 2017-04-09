@@ -36,13 +36,11 @@ exports.updateOrder = function(order,callback) {
 		response = {};
 		if(err){
 			response.status = reply.error_status;
-			response.message = "Error occured when updating order";
-			response.error = err;
-			console.log(err);
+			response.message = reply.message.err_update;
 		}
 		else {
 			response.status = reply.success_status;
-			response.id = result.id;
+			response.id = order.order_id;
 			//response.stack = result;
 		}
 		callback(response);
@@ -88,21 +86,21 @@ exports.getOrderById = function(id,callback){
 	contactpoint.execute(query,function(err,result){
 		response = {};
 		if(err){
-			console.log('error occured');
+			//console.log('error occured');
 			response.status = reply.error_status;
 			response.message = reply.message.err_getOrderById;
 		}
 		else if (result.rows.length == 0) {
 
-			console.log('zero rows');
+			//console.log('zero rows');
 			response.status = reply.error_status;
 			response.message = reply.message.err_getOrderById;
 			//response.stack = result;
 		}
 		else {
-			//console.log('Sending results');
+			////console.log('Sending results');
 			response.status = reply.success_status;
-			response.orders = result.rows[0];
+			response.order = result.rows[0];
 			//response.stack = result;
 		}
 		callback(response);
@@ -133,36 +131,36 @@ exports.updateStatus = function(id){
 		var status = '';
 		if(err)
 		{
-			console.log('Error occured when getting the status');
-			console.log(err);		
+			//console.log('Error occured when getting the status');
+			//console.log(err);		
 		}
 		else
 		{
-			console.log('result is : ');
-			console.log(result.rows[0].status);
+			//console.log('result is : ');
+			//console.log(result.rows[0].status);
 			if(result.rows[0].status == 'PAID'){	
 				status = 'PREPARING';
-				console.log('status is : ' + status);
+				//console.log('status is : ' + status);
 			}
 			else if(result.rows[0].status == 'PREPARING'){
 				status = 'SERVED';
-				console.log('status is : ' + status);
+				//console.log('status is : ' + status);
 			}
 			else if(result.rows[0].status == 'SERVED'){
 				status = 'COLLECTED';
-				console.log('status is : ' + status);
+				//console.log('status is : ' + status);
 			}
-			console.log('finally status is : ' + status);	
+			//console.log('finally status is : ' + status);	
 			var query = "UPDATE restbucks_order SET status = '"+status+"' WHERE order_id = "+id+"";
-			console.log(query);
+			//console.log(query);
 			contactpoint.execute(query,function(err,result){
 				if(err){
-					console.log('Error occured when updating status');
-					console.log(err);
+					//console.log('Error occured when updating status');
+					//console.log(err);
 				}
 				else{
-					console.log('status updated to : ' + status + 'for ID : ' + id);
-					console.log(result);
+					//console.log('status updated to : ' + status + 'for ID : ' + id);
+					//console.log(result);
 				}
 			});
 		}

@@ -26,12 +26,12 @@ var order = {
 var order_items = [];
 
 var orderQueue = async.queue(function(id,callback){
-	console.log("Processing order :  " + id);
-	console.log("waiting to be processed" + orderQueue.length());
-	console.log('-----------------');
+	//console.log("Processing order :  " + id);
+	//console.log("waiting to be processed" + orderQueue.length());
+	//console.log('-----------------');
 
 	setTimeout(function(){
-		console.log(id);
+		//console.log(id);
 		dbs.updateStatus(id);
 	},5000);
 
@@ -55,7 +55,7 @@ var orderQueue = async.queue(function(id,callback){
 	router.route('/place')
 		.post(function(req,res){
 
-			console.log('arrived in place order');
+			//console.log('arrived in place order');
 			order = {};
 			
 			// Setting order variable from URL
@@ -84,7 +84,7 @@ var orderQueue = async.queue(function(id,callback){
 	router.route('/update/:id')
 		.put(function(req,res){
 
-			console.log('arrived in Update');
+			//console.log('arrived in Update');
 			order = {};
 			
 			// Setting order variable from URL
@@ -98,8 +98,8 @@ var orderQueue = async.queue(function(id,callback){
 					res.end();
 				}
 				else {
-					console.log('result is :');
-					console.log(result);
+					//console.log('result is :');
+					//console.log(result);
 					if(result.orders.status == 'PLACED') {
 						order.amount = req.body.amount;
 						order.location = req.body.location;
@@ -133,7 +133,7 @@ var orderQueue = async.queue(function(id,callback){
 
 	router.route('/cancel/:id')
 		.delete(function(req,res){
-			console.log('arrived cancel order');
+			//console.log('arrived cancel order');
 			
 			var id = req.params.id;
 
@@ -144,10 +144,10 @@ var orderQueue = async.queue(function(id,callback){
 					res.end();
 				}
 				else {
-					if(result.orders.status == 'PLACED') {
-						console.log('Deleting the order');
+					if(result.order.status == 'PLACED') {
+						//console.log('Deleting the order');
 						dbs.cancelOrder(id,function(result){
-						console.log(result);
+						//console.log(result);
 						res.send(result);
 						res.end();
 						});
@@ -166,15 +166,14 @@ var orderQueue = async.queue(function(id,callback){
 	router.route('/orders')
 		.get(function(req,res){
 
-			console.log('Arrived in orders');
+			//console.log('Arrived in orders');
 
 			// Calling database function getOrders
 
 			dbs.getOrders(function(result){
-				console.log(result);
+				//console.log(result);
 				res.send(result);
 				res.end();
-
 			});
 		});		
 
@@ -184,13 +183,13 @@ var orderQueue = async.queue(function(id,callback){
 	router.route('/order/:id')
 		.get(function(req,res){
 
-			console.log('Arrived in vieworder');
+			//console.log('Arrived in vieworder');
 
 			var id = req.params.id;
 			
 			// Calling database function vieworders
 			dbs.getOrderById(id,function(result){
-				console.log(result);
+				//console.log(result);
 				res.send(result);
 				res.end();
 			});
@@ -199,7 +198,7 @@ var orderQueue = async.queue(function(id,callback){
 	router.route('/pay/:id')
 		.post(function(req,res){
 
-			console.log('Arrived in Order Payment');
+			//console.log('Arrived in Order Payment');
 
 			var id = req.params.id;
 
@@ -212,10 +211,10 @@ var orderQueue = async.queue(function(id,callback){
 				}
 				else {
 					if(result.orders.status == 'PLACED') {
-						console.log('Making payment');
+						//console.log('Making payment');
 						dbs.pay(id,function(result){
 							orderQueue.push(id);
-							console.log(result);
+							//console.log(result);
 							res.send(result);
 							res.end();
 						});
