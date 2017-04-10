@@ -6,27 +6,21 @@ var hackathonApp = angular.module('hackathonApp', ['ngRoute']);
 hackathonApp.config(function ($routeProvider) {
     $routeProvider
         .when("/", {
-            templateUrl: "/placeOrder.ejs",
-            controller: "orderController"
+            templateUrl: "/placeOrder.ejs"
         })
         .when("/details", {
-            templateUrl: "/orderDetails.ejs",
-            controller: "orderController"
+            templateUrl: "/orderDetails.ejs"
         })
         .when("/edit", {
-            templateUrl: "editOrder.ejs",
-            controller: "orderController"
+            templateUrl: "editOrder.ejs"
         })
         .when("/status", {
-            templateUrl: "orderStatus.ejs",
-            controller: "orderController"
+            templateUrl: "orderStatus.ejs"
         })
         .when("/all", {
-            templateUrl: "allOrders.ejs",
-            controller: "orderController"
+            templateUrl: "allOrders.ejs"
         })
         .otherwise({
-            templateUrl: "/placeOrder.ejs",
-            controller: "orderController"
+            templateUrl: "/placeOrder.ejs"
         });
 });

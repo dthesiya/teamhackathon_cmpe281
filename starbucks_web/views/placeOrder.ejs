@@ -1,4 +1,4 @@
-<div id="placeorder" ng-controller="orderController" ng-init="">
+<div id="placeorder">
     <form class="container" id="myForm" ng-submit="placeOrder()">
         <div class="panel panel-info">
             <div class="panel-heading">Order</div>
@@ -43,7 +43,7 @@
                                 </select>
                             </td>
                             <td class="text-center">
-                                <input required name="qty" maxlength="2" class="form-control input-sm" id="inputsm" type="number">
+                                <input min="1" max="100" value="1" required name="qty" maxlength="2" class="form-control input-sm" id="inputsm" type="number">
                             </td>
                             <td class="text-center">
                                 <select class="dropdown" id="milk" name="milk_type">

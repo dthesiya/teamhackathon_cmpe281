@@ -13,8 +13,7 @@ Steps to setup Cassandra 3.0.4 Cluster using docker containers
 
 6. now all three cassandra instances are in a cluster communicating with each other. So any communication with any single node will result into data synchronization in all three instances(containers in our case).
 
-
-
+7. create a cluster of docker containers running on different machines using <docker run --name <container-name> -p 9042:9042 -p 7000:7000 -e CASSANDRA_BROADCAST_ADDRESS=<seed-ip(s)> -e CASSANDRA_SEEDS="<seed-ip(s)>" cassandra:3.0.4>
 
 
 
