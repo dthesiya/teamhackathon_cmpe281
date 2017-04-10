@@ -6,24 +6,24 @@ var dbs = require('../database/db');
 var  reply = require('../reply.js');
 
 
-var item = {
+/*var item = {
 				qty : {},
 				name : {},
 				milk_type : {},
 				size : {},
 				price : {},
 			}
-
-var order = {
+*/
+/*var order = {
 	 order_id : {},
 	 amount : {},
 	 location : {},
 	 items : {},
 	 status : {},
 	 message : {}
-}
+}*/
 
-var order_items = [];
+/*var order_items = [];*/
 
 var orderQueue = async.queue(function(id,callback){
 	//console.log("Processing order :  " + id);
@@ -48,44 +48,65 @@ var orderQueue = async.queue(function(id,callback){
 // orderQueue.push('95334769-4fc1-4b9a-b582-ec4b97d6092c');
 // orderQueue.push('589fb5c9-b854-49b1-b4b1-8beb99bd21ad');
 
+	router.route('/order')
 
-	// For placing an order
-	// Order details are expected in Request body
+		// For placing an order
+		// Order details are expected in Request body
 
-	router.route('/place')
 		.post(function(req,res){
 
 			//console.log('arrived in place order');
-			order = {};
+			var order = {};
+			order.items = [];
 			
 			// Setting order variable from URL
 
 			order.amount = req.body.amount;
 			order.location = req.body.location;
 			order.status = 'PLACED';
-			order.message = req.body.message;
 
 			for(var item of req.body.items) {							
-				order_items.push(item);
+				order.items.push(item);
 			}				
-			order.items = order_items;
 
+						console.log('placed order : ');
+						console.log(order);
 			// Calling database function placeOrder
 
 			dbs.placeOrder(order,function(result){
+
 				res.send(result);
 				res.end();
 			});
-	});
+		});
 
-	// For updating an order
-	// Order ID is parsed from URL
+	router.route('/order/:id')
 
-	router.route('/update/:id')
+		// For getting a particular order
+		// Order ID is parsed from URL
+
+		.get(function(req,res){
+
+			//console.log('Arrived in vieworder');
+
+			var id = req.params.id;
+			
+			// Calling database function vieworders
+			dbs.getOrderById(id,function(result){
+				//console.log(result);
+				res.send(result);
+				res.end();
+			});
+		})
+
+		// For updating an order
+		// Order ID is parsed from URL
+
 		.put(function(req,res){
 
 			//console.log('arrived in Update');
-			order = {};
+			var order = {};
+			order.items = [];
 			
 			// Setting order variable from URL
 
@@ -98,43 +119,42 @@ var orderQueue = async.queue(function(id,callback){
 					res.end();
 				}
 				else {
-					//console.log('result is :');
-					//console.log(result);
-					if(result.orders.status == 'PLACED') {
+					if(result.order.status == 'PLACED') {
 						order.amount = req.body.amount;
 						order.location = req.body.location;
 						order.status = 'PLACED';
-						order.message = req.body.message;
 				
 						for(var item of req.body.items) {							
-							order_items.push(item);
+							order.items.push(item);
 						}				
-						order.items = order_items;
+						//order.items = order_items;
+
+						console.log('Updated order : ');
+						console.log(order);
 		
 						// Calling database function placeOrder
 			
 						dbs.updateOrder(order,function(result){
-							res.send(result);
+						 	res.send(result);
 							res.end();
 						});
 					}
 					else {
-						result.status = reply.error_status;
-						result.err = "Cannot update order after payment";
-						res.send(result);
+						final_result = {};
+						final_result.status = reply.error_status;
+						final_result.err = "Cannot update order after payment";
+						res.send(final_result);
 						res.end();
 					}
 				}
 			});
-	});
+		})
 
-	// For canceling an order 
-	// Order ID Is parsed from URL
+		// For canceling an order 
+		// Order ID Is parsed from URL
 
-	router.route('/cancel/:id')
 		.delete(function(req,res){
-			//console.log('arrived cancel order');
-			
+
 			var id = req.params.id;
 
 			dbs.getOrderById(id,function(result){
@@ -152,9 +172,10 @@ var orderQueue = async.queue(function(id,callback){
 						res.end();
 						});
 					}else {
-						result.status = reply.error_status;
-						result.err = reply.message.err_calcelPaid;
-						res.send(result);
+						final_result = {};
+						final_result.status = reply.error_status;
+						final_result.err = reply.message.err_calcelPaid;
+						res.send(final_result);
 						res.end();
 					}
 				}
@@ -166,8 +187,6 @@ var orderQueue = async.queue(function(id,callback){
 	router.route('/orders')
 		.get(function(req,res){
 
-			//console.log('Arrived in orders');
-
 			// Calling database function getOrders
 
 			dbs.getOrders(function(result){
@@ -177,28 +196,8 @@ var orderQueue = async.queue(function(id,callback){
 			});
 		});		
 
-	// For getting a particular order
-	// Order ID is parsed from URL
-
-	router.route('/order/:id')
-		.get(function(req,res){
-
-			//console.log('Arrived in vieworder');
-
-			var id = req.params.id;
-			
-			// Calling database function vieworders
-			dbs.getOrderById(id,function(result){
-				//console.log(result);
-				res.send(result);
-				res.end();
-			});
-		});	
-
 	router.route('/pay/:id')
 		.post(function(req,res){
-
-			//console.log('Arrived in Order Payment');
 
 			var id = req.params.id;
 
@@ -210,7 +209,7 @@ var orderQueue = async.queue(function(id,callback){
 					res.end();
 				}
 				else {
-					if(result.orders.status == 'PLACED') {
+					if(result.order.status == 'PLACED') {
 						//console.log('Making payment');
 						dbs.pay(id,function(result){
 							orderQueue.push(id);
@@ -220,9 +219,10 @@ var orderQueue = async.queue(function(id,callback){
 						});
 					}
 					else {
-						result.status = reply.error_status;
-						result.err = reply.message.err_paidAlready;
-						res.send(result);
+						final_result = {};
+						final_result.status = reply.error_status;
+						final_result.err = reply.message.err_paidAlready;
+						res.send(final_result);
 						res.end();
 					}
 				}

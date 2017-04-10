@@ -1,7 +1,8 @@
 var cassandra = require('cassandra-driver');
-var contactpoint = new cassandra.Client({contactPoints : ['192.168.99.100'], keyspace: 'restbucks'});
 var uuid = cassandra.types.Uuid;
 var  reply = require('../reply.js');
+var contactpoint = new cassandra.Client({contactPoints : [reply.contactPoint1], keyspace: 'restbucks'});
+
 const querystring = require('querystring');
 
 exports.placeOrder = function(order,callback) {
@@ -39,6 +40,7 @@ exports.updateOrder = function(order,callback) {
 			response.message = reply.message.err_update;
 		}
 		else {
+
 			response.status = reply.success_status;
 			response.id = order.order_id;
 			//response.stack = result;
@@ -136,7 +138,6 @@ exports.updateStatus = function(id){
 		}
 		else
 		{
-			//console.log('result is : ');
 			//console.log(result.rows[0].status);
 			if(result.rows[0].status == 'PAID'){	
 				status = 'PREPARING';

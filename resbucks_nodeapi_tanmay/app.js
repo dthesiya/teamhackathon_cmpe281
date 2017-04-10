@@ -16,7 +16,7 @@ var apis = require('./routes/apis');
 //app.use('/', index);
 //p.use('/placeorder',placeorder);
 //app.use('/api', api);
-app.use('/',apis);
+app.use('/',apis); 
 //var database = require('./database/db.js');
 
 app.set('port', process.env.PORT || 3000); 
