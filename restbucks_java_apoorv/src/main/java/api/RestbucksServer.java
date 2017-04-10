@@ -18,7 +18,7 @@ public class RestbucksServer extends Application {
     public Restlet createInboundRoot() {
         Router router = new Router(getContext()) ;
         router.attach( "/order/{order_id}", OrderResource.class ) ;        
-        router.attach( "pay/{order_id}", PaymentResource.class ) ;        
+        router.attach( "/pay/{order_id}", PaymentResource.class ) ;        
         router.attach( "/order", OrderResource.class ) ;        
         router.attach( "/orders", OrdersResource.class ) ;        
         router.attach( "/", PingResource.class ) ;        
