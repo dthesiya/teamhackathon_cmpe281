@@ -8,13 +8,15 @@
                         <h4 style="display: inline">Order from: </h4>
                         <h3 style="display: inline"> {{order.location}}</h3>
                     </div>
+                    <div class="col-md-6 text-right">
+                        <button id="all" type="button" class="btn btn-success" ng-click="allOrders()">All Orders</button>
+                    </div>
                 </div>
                 <hr/>
                 <div class="row top-buffer">
                     <div class="col-md-6 text-left"><h4>Build your order here</h4></div>
                     <div class="col-md-6 text-right">
                         <button id="add" type="button" class="btn btn-info" onclick="addRow('myTable')">Add Item</button>
-                        <button id="all" type="button" class="btn btn-success" ng-click="allOrders()">All Orders</button>
                     </div>
                 </div>
                 <div class="top-buffer">
