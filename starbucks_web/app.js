@@ -24,7 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views')));
 
 app.get('/', index.getindex);
-app.get('/prices', index.getPrices);
+app.get('/coffees', index.getCoffeeDetails);
+app.get('/locations', index.getLocations);
 app.post('/order', order.placeOrder);
 app.get('/order/:orderId', order.orderDetails);
 app.put('/order/:orderId', order.updateOrder);

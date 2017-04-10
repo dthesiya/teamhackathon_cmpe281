@@ -1,10 +1,15 @@
 var express = require('express');
+var config = require('./config.json');
 
 /* GET home page. */
 exports.getindex = function(req, res, next) {
-    res.render('index', { title: 'Starbucks' });
+    res.render('index', { title: config.title });
 };
 
-exports.getPrices = function (req, res, next) {
-    res.json(JSON.stringify({small:1.5, medium:2.0, large:2.5}));
+exports.getCoffeeDetails = function (req, res, next) {
+    res.send(config.coffee);
+};
+
+exports.getLocations = function (req, res, next) {
+    res.send(config.locations);
 };
