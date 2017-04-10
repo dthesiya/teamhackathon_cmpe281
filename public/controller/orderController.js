@@ -300,6 +300,7 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
     };
 
     $scope.getAllOrders = function(){
+        $scope.selectCity();
         $http({
             method : "GET",
             url : '/orders',
