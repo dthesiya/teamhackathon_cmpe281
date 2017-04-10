@@ -1,4 +1,7 @@
 hackathonApp.controller('orderController', function($scope, $http, $location) {
+    $scope.isError = false;
+    var errMsg = "An error occurred.";
+    $scope.errorMessage = errMsg;
     $http({
         method : "GET",
         url : '/coffees'
@@ -8,6 +11,7 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
     }).error(function(error) {
         console.log(error);
         //set error message
+        $scope.isError = true;
     });
 
     $http({
@@ -18,6 +22,8 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
     }).error(function(error) {
         console.log(error);
         //set error message
+        $scope.isError = true;
+        $scope.errorMessage = errMsg;
     });
 
     $scope.placeOrder = function(){
@@ -57,16 +63,21 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
             url : '/order',
             data: {order: order}
         }).success(function(data, status) {
-            if(data.data.status === 200){
+            console.log(data);
+            if(data.data.status === "200"){
                 sessionStorage.setItem("orderId", data.data.order_id);
                 sessionStorage.setItem("location", order.location);
                 $location.path('/details');
             }else{
                 //set error message
+                $scope.isError = true;
+                $scope.errorMessage = data.data.message;
             }
         }).error(function(error) {
             console.log(error);
             //set error message
+            $scope.isError = true;
+            $scope.errorMessage = errMsg;
         });
     };
 
@@ -78,14 +89,18 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
                 'location': sessionStorage.getItem("location")
             }
         }).success(function(data, status) {
-            if(data.data.status === 200){
+            if(data.data.status === "200"){
                 $scope.order = data.data.order;
             }else{
                 //set error message
+                $scope.isError = true;
+                $scope.errorMessage = data.data.message;
             }
         }).error(function(error) {
             console.log(error);
             //set error message
+            $scope.isError = true;
+            $scope.errorMessage = errMsg;
         });
     };
 
@@ -98,7 +113,7 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
                     'location': sessionStorage.getItem("location")
                 }
             }).success(function(data, status) {
-                if(data.data.status === 200){
+                if(data.data.status === "200"){
                     $scope.order = data.data.order;
                     changeProgressValue($scope.order.status);
                     if($scope.order.status === 'COLLECTED'){
@@ -106,10 +121,14 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
                     }
                 }else{
                     //set error message
+                    $scope.isError = true;
+                    $scope.errorMessage = data.data.message;
                 }
             }).error(function(error) {
                 console.log(error);
                 //set error message
+                $scope.isError = true;
+                $scope.errorMessage = errMsg;
             });
         },1000);
     };
@@ -169,7 +188,6 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
 
     $scope.updateOrder = function(){
         var order = {
-            id: $scope.order.id,
             location : $scope.order.location,
             items : []
         };
@@ -202,17 +220,21 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
         });
         $http({
             method : "PUT",
-            url : '/order/'+$scope.order.id,
+            url : '/order/'+sessionStorage.getItem("orderId"),
             data: { order: order }
         }).success(function(data, status) {
-            if(data.data.status === 200){
+            if(data.data.status === "200"){
                 $location.path('/details');
             }else{
                 //set error message
+                $scope.isError = true;
+                $scope.errorMessage = data.data.message;
             }
         }).error(function(error) {
             console.log(error);
             //set error message
+            $scope.isError = true;
+            $scope.errorMessage = errMsg;
         });
     };
 
@@ -224,14 +246,18 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
                 'location': sessionStorage.getItem("location")
             }
         }).success(function(data, status) {
-            if(data.data.status === 200){
+            if(data.data.status === "200"){
                 $location.path('/status');
             }else{
                 //set error message
+                $scope.isError = true;
+                $scope.errorMessage = data.data.message;
             }
         }).error(function(error) {
             console.log(error);
             //set error message
+            $scope.isError = true;
+            $scope.errorMessage = errMsg;
         });
     };
 
@@ -243,14 +269,18 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
                 'location': sessionStorage.getItem("location")
             }
         }).success(function(data, status) {
-            if(data.data.status === 200){
+            if(data.data.status === "200"){
                 $location.path('/');
             }else{
                 //set error message
+                $scope.isError = true;
+                $scope.errorMessage = data.data.message;
             }
         }).error(function(error) {
             console.log(error);
             //set error message
+            $scope.isError = true;
+            $scope.errorMessage = errMsg;
         });
     };
 
@@ -260,36 +290,45 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
             method : "GET",
             url : '/orders',
             headers: {
-                'location': sessionStorage.getItem("location")
+                'location': $scope.city
             }
         }).success(function(data, status) {
-            if(data.data.status === 200){
+            if(data.data.status === "200"){
                 $scope.orders = data.data.orders;
             }else{
                 //set error message
+                $scope.isError = true;
+                $scope.errorMessage = data.data.message;
             }
         }).error(function(error) {
             console.log(error);
             //set error message
+            $scope.isError = true;
+            $scope.errorMessage = errMsg;
         });
     };
 
     $scope.onLocationChange = function(){
+        var store = $('#store').find(":selected").text();
         $http({
             method : "GET",
             url : '/orders',
             headers: {
-                'location': sessionStorage.getItem("location")
+                'location': store
             }
         }).success(function(data, status) {
-            if(data.data.status === 200){
+            if(data.data.status === "200"){
                 $scope.orders = data.data.orders;
             }else{
                 //set error message
+                $scope.isError = true;
+                $scope.errorMessage = data.data.message;
             }
         }).error(function(error) {
             console.log(error);
             //set error message
+            $scope.isError = true;
+            $scope.errorMessage = errMsg;
         });
     };
 

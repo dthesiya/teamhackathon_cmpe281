@@ -91,21 +91,13 @@
     </script>
 </head>
 
-<body ng-app="hackathonApp">
+<body ng-app="hackathonApp" ng-controller="orderController">
 <div>
     <h1 class="text-center jumbotron">Starbucks Coffee Shop</h1>
-    <div class="navbar-default" role="navigation">
-        <div class="container">
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <!--<a href="#placeorder" data-title="Place Order" ng-click="">-->
-                        <!--<i class="fa fa-dashboard"></i>-->
-                        <!--Place Order-->
-                        <!--</a>-->
-                    </li>
-                </ul>
-            </div>
+    <div class="row">
+        <div class="text-center">
+            <h3 ng-show="{{isError === true}}"
+                ng-hide="{{isError === false}}" style="color: red">{{ errorMessage }}</h3>
         </div>
     </div>
 </div>

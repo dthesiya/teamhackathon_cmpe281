@@ -2,12 +2,12 @@
   "title": "Starbucks",
   "locations": [ "San Jose", "Santa Clara", "Sunnyvale" ],
   "kong": {
-    "host": "http://localhost",
-    "port": 3001,
+    "host": "http://52.53.192.184",
+    "port": 8000,
     "locations": {
-      "San Jose" : "",
-      "Santa Clara" : "",
-      "Sunnyvale" : ""
+      "San Jose" : "/sanjose",
+      "Santa Clara" : "/santaclara",
+      "Sunnyvale" : "/sunnyvale"
     },
     "apis": {
       "placeorder": {
@@ -37,8 +37,8 @@
     }
   },
   "coffee": {
-    "names": [ "Mocha", "Tea", "Cappuccino" ],
-    "milk_types": [ "Whole", "Soy", "Latte" ],
+    "names": [ "Americano", "Cappuccino", "Espresso", "Latte", "Macchiato", "Mocha" ],
+    "milk_types": [ "Whole", "Low-fat", "Fat-free" ],
     "sizes": [ "small", "medium", "large" ],
     "prices": {
       "small": 1.5,

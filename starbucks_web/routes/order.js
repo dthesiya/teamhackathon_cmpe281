@@ -79,6 +79,5 @@ exports.getAllOrders = function (req, res, next) {
     var url = host + config.kong.locations[location] + config.kong.apis.getallorders.url;
     var resp = request(config.kong.apis.getallorders.method, url);
     var resp = JSON.parse(resp.getBody('utf8'));
-
     res.send({status : 200, data : resp}).end();
 };
