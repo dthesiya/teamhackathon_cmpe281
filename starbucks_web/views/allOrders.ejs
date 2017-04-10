@@ -3,9 +3,7 @@
         <div class="col-md-6 text-left">
             <h3 style="display: inline">Orders from:</h3>
             <select class="selectpicker" ng-change="onLocationChange()" id="store" name="location" ng-model="city">
-                <option value="San Jose" selected>San Jose</option>
-                <option value="Santa Clara">Santa Clara</option>
-                <option value="Sunnyvale">Sunnyvale</option>
+                <option ng-repeat="location in locations" value="{{location}}">{{location}}</option>
             </select>
         </div>
         <div class="col-md-6 text-right">

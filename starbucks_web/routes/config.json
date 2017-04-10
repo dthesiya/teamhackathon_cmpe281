@@ -1,0 +1,57 @@
+{
+  "title": "Starbucks",
+  "locations": [ "San Jose", "Santa Clara", "Sunnyvale" ],
+  "kong": {
+    "host": "http://localhost",
+    "port": 3001,
+    "locations": {
+      "San Jose" : "",
+      "Santa Clara" : "",
+      "Sunnyvale" : ""
+    },
+    "apis": {
+      "placeorder": {
+        "url": "/order",
+        "method": "POST"
+      },
+      "getorder": {
+        "url": "/order",
+        "method": "GET"
+      },
+      "updateorder": {
+        "url": "/order",
+        "method": "PUT"
+      },
+      "cancelorder": {
+        "url": "/order",
+        "method": "DELETE"
+      },
+      "payorder": {
+        "url": "/pay",
+        "method": "POST"
+      },
+      "getallorders": {
+        "url": "/orders",
+        "method": "GET"
+      }
+    }
+  },
+  "coffee": {
+    "names": [ "Mocha", "Tea", "Cappuccino" ],
+    "milk_types": [ "Whole", "Soy", "Latte" ],
+    "sizes": [ "small", "medium", "large" ],
+    "prices": {
+      "small": 1.5,
+      "medium": 2.0,
+      "large": 2.5
+    }
+  },
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

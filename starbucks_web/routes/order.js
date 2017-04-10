@@ -2,48 +2,83 @@
  * Created by dthesiya on 4/4/17.
  */
 var express = require('express');
-global.orders = [];
+var config = require('./config.json');
+var http = require('http');
+var request = require('sync-request');
+
+var host = config.kong.host + ":" + config.kong.port;
+var prices = config.coffee.prices;
 
 exports.placeOrder = function (req, res, next) {
     var order = req.body.order;
-    order.id = 1234;
-    order.status = "PLACED";
-    global.order = order;
-    global.orders.push(order);
-    res.send({status : 200, orderId : 1234});
+    var amount = 0;
+    for(var item of order.items){
+        item.price = prices[item.size];
+        amount += item.price * item.qty;
+    }
+    order.amount = amount;
+    var url = host + config.kong.locations[order.location] + config.kong.apis.placeorder.url;
+    var resp = request(config.kong.apis.placeorder.method, url, {
+        json: order
+    });
+    var resp = JSON.parse(resp.getBody('utf8'));
+    res.send({status : 200, data : resp}).end();
 };
 
 exports.updateOrder = function (req, res, next) {
-    global.order = req.body.order;
-    res.send({status : 200});
+    var orderId = req.params.orderId;
+    var order = req.body.order;
+    var amount = 0;
+    for(var item of order.items){
+        item.price = prices[item.size];
+        amount += item.price * item.qty;
+    }
+    order.amount = amount;
+    var url = host + config.kong.locations[order.location] + config.kong.apis.updateorder.url
+        + "/" + orderId;
+    var resp = request(config.kong.apis.updateorder.method, url, {
+        json: order
+    });
+    var resp = JSON.parse(resp.getBody('utf8'));
+    res.send({status : 200, data : resp}).end();
 };
 
 exports.orderDetails = function (req, res, next) {
-    res.json(JSON.stringify(global.order));
+    var orderId = req.params.orderId;
+    var location = req.headers["location"];
+    var url = host + config.kong.locations[location] + config.kong.apis.getorder.url
+        + "/" + orderId;
+    var resp = request(config.kong.apis.getorder.method, url);
+    var resp = JSON.parse(resp.getBody('utf8'));
+    res.send({status : 200, data : resp}).end();
 };
 
 exports.payOrder = function (req, res, next) {
-    res.send({status : 200});
+    var orderId = req.params.orderId;
+    var location = req.headers["location"];
+    var url = host + config.kong.locations[location] + config.kong.apis.payorder.url
+        + "/" + orderId;
+    var resp = request(config.kong.apis.payorder.method, url);
+    var resp = JSON.parse(resp.getBody('utf8'));
+    res.send({status : 200, data : resp}).end();
 };
 
 exports.cancelOrder = function (req, res, next) {
-    res.send({status:200});
+    var orderId = req.params.orderId;
+    var location = req.headers["location"];
+    var url = host + config.kong.locations[location] + config.kong.apis.cancelorder.url
+        + "/" + orderId;
+    var resp = request(config.kong.apis.cancelorder.method, url);
+    var resp = JSON.parse(resp.getBody('utf8'));
+    res.send({status : 200, data : resp}).end();
 };
 
 exports.getAllOrders = function (req, res, next) {
-    var city = req.headers["city"];
-    var list = [];
-    console.log(city);
-    for(var i = 0; i < global.orders.length; i++){
-        var ordr = global.orders[i];
-        console.log(ordr.location+" "+city);
-        if(ordr.location === city){
-            list.push(ordr);
-        }
-    }
-    res.json(JSON.stringify(list));
-};
+    var orderId = req.params.orderId;
+    var location = req.headers["location"];
+    var url = host + config.kong.locations[location] + config.kong.apis.getallorders.url;
+    var resp = request(config.kong.apis.getallorders.method, url);
+    var resp = JSON.parse(resp.getBody('utf8'));
 
-exports.pay = function (req, res, next) {
-    res.json(JSON.stringify(global.order));
+    res.send({status : 200, data : resp}).end();
 };

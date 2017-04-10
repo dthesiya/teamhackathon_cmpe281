@@ -9,9 +9,7 @@
                     </div>
                     <div class="col-md-4">
                         <select class="selectpicker" id="location" name="location">
-                            <option value="San Jose" selected>San Jose</option>
-                            <option value="Santa Clara">Santa Clara</option>
-                            <option value="Sunnyvale">Sunnyvale</option>
+                            <option ng-repeat="location in locations" value="{{location}}">{{location}}</option>
                         </select>
                     </div>
                     <div class="col-md-6 text-right">
@@ -40,9 +38,8 @@
                         <tr class='Box divbutton'>
                             <td class="text-center">
                                 <select class="dropdown" id="coffee" name="name">
-                                    <option value="mocha">Mocha</option>
-                                    <option value="tea">Tea</option>
-                                    <option value="cappuccino">Cappuccino</option>
+                                    <option ng-repeat="name in coffees.names"
+                                            value="{{name}}">{{name}}</option>
                                 </select>
                             </td>
                             <td class="text-center">
@@ -50,16 +47,14 @@
                             </td>
                             <td class="text-center">
                                 <select class="dropdown" id="milk" name="milk_type">
-                                    <option value="whole">Whole</option>
-                                    <option value="latte">Latte</option>
-                                    <option>Soy</option>
+                                    <option ng-repeat="milk_type in coffees.milk_types"
+                                            value="{{milk_type}}">{{milk_type}}</option>
                                 </select>
                             </td>
                             <td class="text-center">
                                 <select class="dropdown" id="size" onchange="sizeChanged(this)" name="size">
-                                    <option value="small" selected>Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">large</option>
+                                    <option ng-repeat="size in coffees.sizes"
+                                            value="{{size}}">{{size}}</option>
                                 </select>
                             </td>
                             <td class="text-center"><label for="myvalue">$ {{prices.small}}</label></td>
