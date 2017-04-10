@@ -83,8 +83,8 @@ public class ConnectionUtil {
  }
 	
 	public ArrayList<api.Order> retriveValues() {
-		ArrayList<api.Order> existing_orders = new ArrayList<>();
-		api.Order result = new api.Order();
+		ArrayList<api.Order> existing_orders = new ArrayList<api.Order>();
+		
 		String status = null;
 		
         try {
@@ -92,7 +92,9 @@ public class ConnectionUtil {
                if(rs != null) {
                      List<Row> rows =rs.all();
                      if(rows != null) {
+                    	
                             for(Row row : rows) {
+                            	api.Order result = new api.Order();
                             	
                             	result.setOrder_id(row.getUUID("order_id").toString());
                             	result.setAmount(row.getDecimal("amount").doubleValue());
@@ -140,16 +142,22 @@ public class ConnectionUtil {
                             	}
                             	
                             	existing_orders.add(result);
+                            	//System.out.println("Added order_id :"+result.getOrder_id());
+                            	
                             	
                             	
                             	System.out.println("Printing all rows");
                                    System.out.println(row);
                             }
+                            
                      }
                }
+        
         } catch(Exception e) {
                System.out.println("Exception in select Stament for all orders"+e.getMessage());
         }
+       
+        
         return existing_orders;
  }
 	

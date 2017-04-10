@@ -124,6 +124,9 @@ public class RestbucksAPI  implements Serializable{
     		Collection<Order> orders = new ArrayList<Order>();
     		
     		orders = myconn.retriveValues();
+    		//ArrayList<Order> finalorders = (ArrayList<Order>) orders;
+    		
+    		
     	
 		return orders; // get all orders from the database for this store
         // return orders.values() ;
