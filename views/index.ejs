@@ -44,16 +44,16 @@
                 }
             }else{
                 var newcell = row.insertCell(0);
-                newcell.innerHTML = "<select class='dropdown' id='coffee' name='coffee'> <option value='mocha'>Mocha</option> <option value='tea'>Tea</option> <option value='cappuccino'>Cappuccino</option> </select>";
+                newcell.innerHTML = "<select class='dropdown' id='coffee' name='coffee'> <option value='Americano'>Americano</option> <option value='Cappuccino'>Cappuccino</option> <option value='Espresso'>Espresso</option> <option value='Latte'>Latte</option> <option value='Macchiato'>Macchiato</option> <option value='Mocha'>Mocha</option> </select>";
                 newcell.style.textAlign = 'center';
                 var newcell = row.insertCell(1);
-                newcell.innerHTML = "<input name='qty' class='form-control input-sm' id='inputsm' type='number'>";
+                newcell.innerHTML = "<input name='qty' min="1" max="100" value="1" class='form-control input-sm' id='inputsm' type='number'>";
                 newcell.style.textAlign = 'center';
                 var newcell = row.insertCell(2);
-                newcell.innerHTML = "<select class='dropdown' id='milk' name='milk_type'> <option value='whole'>Whole</option> <option value='latte'>Latte</option> <option>Soy</option> </select>";
+                newcell.innerHTML = "<select class='dropdown' id='milk' name='milk_type'> <option value='Whole'>Whole</option> <option value='Low-fat'>Low-fat</option> <option value="Fat-free">Fat-free</option> </select>";
                 newcell.style.textAlign = 'center';
                 var newcell = row.insertCell(3);
-                newcell.innerHTML = "<select class='dropdown' id='size' onchange='sizeChanged(this)' name='size'> <option value='small' selected>Small</option> <option value='medium'>Medium</option> <option value='large'>large</option> </select>";
+                newcell.innerHTML = "<select class='dropdown' id='size' onchange='sizeChanged(this)' name='size'> <option value='Small' selected>Small</option> <option value='Medium'>Medium</option> <option value='Large'>Large</option> </select>";
                 newcell.style.textAlign = 'center';
                 var newcell = row.insertCell(4);
                 var smallvalue = $('[ng-controller="orderController"]').scope().prices.small;
@@ -68,25 +68,7 @@
         function sizeChanged(element) {
             var size = $(element).val();
             var scope = $('[ng-controller="orderController"]').scope();
-            switch (size) {
-                case "small": {
-                    var temp =
-                        $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.small);
-                    break;
-                }
-                case "medium": {
-                    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.medium);
-                    break;
-                }
-                case "large": {
-                    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.large);
-                    break;
-                }
-                default: {
-                    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.small);
-                    break;
-                }
-            }
+	    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices[small]);
         };
     </script>
 </head>

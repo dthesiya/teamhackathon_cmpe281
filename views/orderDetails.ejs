@@ -9,15 +9,15 @@
                         <h3 style="display: inline"> {{order.location}}</h3>
                     </div>
                     <div class="col-md-6 text-right">
-                        <button id="edit" class="btn btn-success" ng-click="newOrder()">New Order</button>
-                        <button id="edit" class="btn btn-info" ng-click="allOrders()">All Orders</button>
+                        <button id="edit" type="button" class="btn btn-success" ng-click="newOrder()">New Order</button>
+                        <button id="edit" type="button" class="btn btn-info" ng-click="allOrders()">All Orders</button>
                     </div>
                 </div>
                 <hr/>
                 <div class="row top-buffer">
                     <div class="col-md-6 text-left"><h4>Your order items</h4></div>
                     <div class="col-md-6 text-right">
-                        <button id="edit" class="btn btn-primary" ng-click="editOrder()">Edit Order</button>
+                        <button id="edit" type="button" class="btn btn-primary" ng-click="editOrder()">Edit Order</button>
                     </div>
                 </div>
                 <div class="top-buffer">
@@ -55,8 +55,8 @@
             <div class="panel-footer text-center clearfix">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
-                    <button class="btn btn-success" ng-click="payOrder()">Pay Order</button>
-                    <button class="btn btn-danger" ng-click="cancelOrder()">Cancel Order</button>
+                    <button type="button" class="btn btn-success" ng-click="payOrder()">Pay Order</button>
+                    <button type="button" class="btn btn-danger" ng-click="cancelOrder()">Cancel Order</button>
                 </div>
                 <div class="col-md-4"></div>
             </div>
