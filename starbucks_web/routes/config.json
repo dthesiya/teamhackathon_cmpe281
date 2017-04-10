@@ -39,11 +39,11 @@
   "coffee": {
     "names": [ "Americano", "Cappuccino", "Espresso", "Latte", "Macchiato", "Mocha" ],
     "milk_types": [ "Whole", "Low-fat", "Fat-free" ],
-    "sizes": [ "small", "medium", "large" ],
+    "sizes": [ "Small", "Medium", "Large" ],
     "prices": {
-      "small": 1.5,
-      "medium": 2.0,
-      "large": 2.5
+      "Small": 1.5,
+      "Medium": 2.0,
+      "Large": 2.5
     }
   },
   "compilerOptions": {

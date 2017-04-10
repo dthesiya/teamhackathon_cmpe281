@@ -19,12 +19,27 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
         url : '/locations'
     }).success(function(data, status) {
         $scope.locations = data;
+        var city = sessionStorage.getItem("location");
+        if(city === undefined || city === null){
+            $scope.city = $scope.locations[0];
+        }else{
+            $scope.city = city;
+        }
     }).error(function(error) {
         console.log(error);
         //set error message
         $scope.isError = true;
         $scope.errorMessage = errMsg;
     });
+
+    $scope.selectCity = function(){
+        var city = sessionStorage.getItem("location");
+        if(city === undefined || city === null){
+            $scope.city = $scope.locations[0];
+        }else{
+            $scope.city = city;
+        }
+    };
 
     $scope.placeOrder = function(){
         var order = {
@@ -285,7 +300,7 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
     };
 
     $scope.getAllOrders = function(){
-        $scope.city = "San Jose";
+        $scope.selectCity();
         $http({
             method : "GET",
             url : '/orders',
@@ -308,8 +323,14 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
         });
     };
 
+    $scope.locationChanged = function(){
+        var store = $('#store').find(":selected").text();
+        sessionStorage.setItem("location", store);
+    };
+
     $scope.onLocationChange = function(){
         var store = $('#store').find(":selected").text();
+        sessionStorage.setItem("location", store);
         $http({
             method : "GET",
             url : '/orders',
@@ -320,6 +341,7 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
             if(data.data.status === "200"){
                 $scope.orders = data.data.orders;
             }else{
+                $scope.orders = [];
                 //set error message
                 $scope.isError = true;
                 $scope.errorMessage = data.data.message;
@@ -343,4 +365,65 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
     $scope.allOrders = function(){
         $location.path('/all');
     };
+
+    $scope.editOrderCopy = function(order_id, location){
+        sessionStorage.setItem("orderId", order_id);
+        sessionStorage.setItem("location", location);
+        $location.path('/edit');
+    };
+
+
+    $scope.payOrderCopy = function(order_id, location){
+        $http({
+            method : "PUT",
+            url : '/pay/' + order_id,
+            headers: {
+                'location': location
+            }
+        }).success(function(data, status) {
+            if(data.data.status === "200"){
+                //move user to status page
+                sessionStorage.setItem("orderId", order_id);
+                sessionStorage.setItem("location", location);
+                $location.path('/status');
+            }else{
+                //set error message
+                $scope.isError = true;
+                $scope.errorMessage = data.data.message;
+            }
+        }).error(function(error) {
+            console.log(error);
+            //set error message
+            $scope.isError = true;
+            $scope.errorMessage = errMsg;
+        });
+    };
+
+    $scope.cancelOrderCopy = function(order, location){
+        $http({
+            method : "DELETE",
+            url : '/order/' + order.order_id,
+            headers: {
+                'location': location
+            }
+        }).success(function(data, status) {
+            if(data.data.status === "200"){
+                //remove order from session orders
+                var index = $scope.orders.indexOf(order);
+                $scope.orders.splice(index, 1);
+            }else{
+                //set error message
+                $scope.isError = true;
+                $scope.errorMessage = data.data.message;
+            }
+        }).error(function(error) {
+            console.log(error);
+            //set error message
+            $scope.isError = true;
+            $scope.errorMessage = errMsg;
+        });
+    };
+
+
+
 });

@@ -8,13 +8,15 @@
                         <h4 style="display: inline">Order from: </h4>
                         <h3 style="display: inline"> {{order.location}}</h3>
                     </div>
+                    <div class="col-md-6 text-right">
+                        <button id="all" type="button" class="btn btn-success" ng-click="allOrders()">All Orders</button>
+                    </div>
                 </div>
                 <hr/>
                 <div class="row top-buffer">
                     <div class="col-md-6 text-left"><h4>Build your order here</h4></div>
                     <div class="col-md-6 text-right">
-                        <button id="add" class="btn btn-info" onclick="addRow('myTable')">Add Item</button>
-                        <button id="edit" class="btn btn-success" ng-click="allOrders()">All Orders</button>
+                        <button id="add" type="button" class="btn btn-info" onclick="addRow('myTable')">Add Item</button>
                     </div>
                 </div>
                 <div class="top-buffer">
@@ -37,7 +39,8 @@
                                 </select>
                             </td>
                             <td class="text-center">
-                                <input required name="qty" maxlength="2" ng-model="item.qty" class="form-control input-sm" id="inputsm" type="number"/>
+                                <input required min="1" max="100" value="1" name="qty" maxlength="2"
+                                       ng-model="item.qty" class="form-control input-sm" id="inputsm" type="number"/>
                             </td>
                             <td class="text-center">
                                 <select class="dropdown" id="milk" name="milk_type"  ng-model="item.milk_type">
