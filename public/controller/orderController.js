@@ -20,7 +20,7 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
     }).success(function(data, status) {
         $scope.locations = data;
         var city = sessionStorage.getItem("location");
-        if(city === undefined){
+        if(city === undefined || city === null){
             $scope.city = $scope.locations[0];
         }else{
             $scope.city = city;
@@ -34,7 +34,7 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
 
     $scope.selectCity = function(){
         var city = sessionStorage.getItem("location");
-        if(city === undefined){
+        if(city === undefined || city === null){
             $scope.city = $scope.locations[0];
         }else{
             $scope.city = city;
@@ -300,12 +300,6 @@ hackathonApp.controller('orderController', function($scope, $http, $location) {
     };
 
     $scope.getAllOrders = function(){
-        var city = sessionStorage.getItem("location");
-        if(city === undefined){
-            $scope.city = $scope.locations[0];
-        }else{
-            $scope.city = city;
-        }
         $http({
             method : "GET",
             url : '/orders',
