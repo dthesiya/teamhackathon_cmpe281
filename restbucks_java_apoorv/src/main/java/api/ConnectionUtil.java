@@ -36,7 +36,7 @@ public class ConnectionUtil {
 	
 	public ConnectionUtil () {
 
-		this.cluster = Cluster.builder().addContactPoint("localhost").build();
+		this.cluster = Cluster.builder().addContactPoint("54.215.129.148").withPort(9042).build();
 		   
 		this.session = cluster.connect("restbucks");
 		
