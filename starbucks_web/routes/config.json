@@ -2,7 +2,7 @@
   "title": "Starbucks",
   "locations": [ "San Jose", "Santa Clara", "Sunnyvale" ],
   "kong": {
-    "host": "http://52.53.192.184",
+    "host": "http://54.67.50.27",
     "port": 8000,
     "locations": {
       "San Jose" : "/sanjose",
