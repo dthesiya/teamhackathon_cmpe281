@@ -1,0 +1,441 @@
+module.js:328
+    throw err;
+    ^
+
+Error: Cannot find module '/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/server.js'
+    at Function.Module._resolveFilename (module.js:326:15)
+    at Function.Module._load (module.js:277:25)
+    at Function.Module.runMain (module.js:442:10)
+    at startup (node.js:136:18)
+    at node.js:966:3
+
+> nodeserver-v@0.0.0 start /home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT
+> node app.js
+
+Express server listening on port 3000
+placed order : 
+{ items: 
+   [ { name: 'Americano',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+(node) warning: possible EventEmitter memory leak detected. 11 add listeners added. Use emitter.setMaxListeners() to increase limit.
+Trace
+    at HostMap.addListener (events.js:239:17)
+    at Client._setHostListeners (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:1012:14)
+    at Array.initLoadBalancingPolicy (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:360:12)
+    at /home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/utils.js:674:21
+    at nextTickCallbackWith0Args (node.js:419:9)
+    at process._tickCallback (node.js:348:13)
+(node) warning: possible EventEmitter memory leak detected. 11 remove listeners added. Use emitter.setMaxListeners() to increase limit.
+Trace
+    at HostMap.addListener (events.js:239:17)
+    at Client._setHostListeners (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:1018:14)
+    at Array.initLoadBalancingPolicy (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:360:12)
+    at /home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/utils.js:674:21
+    at nextTickCallbackWith0Args (node.js:419:9)
+    at process._tickCallback (node.js:348:13)
+(node) warning: possible EventEmitter memory leak detected. 11 down listeners added. Use emitter.setMaxListeners() to increase limit.
+Trace
+    at Host.addListener (events.js:239:17)
+    at /home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:1025:7
+    at HostMap.forEach (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/host.js:344:5)
+    at Client._setHostListeners (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:1023:14)
+    at Array.initLoadBalancingPolicy (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:360:12)
+    at /home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/utils.js:674:21
+    at nextTickCallbackWith0Args (node.js:419:9)
+    at process._tickCallback (node.js:348:13)
+(node) warning: possible EventEmitter memory leak detected. 11 up listeners added. Use emitter.setMaxListeners() to increase limit.
+Trace
+    at Host.addListener (events.js:239:17)
+    at /home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:1024:7
+    at HostMap.forEach (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/host.js:344:5)
+    at Client._setHostListeners (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:1023:14)
+    at Array.initLoadBalancingPolicy (/home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/client.js:360:12)
+    at /home/ubuntu/cmpe281/teamhackathon_cmpe281/restbucks_nodeapi_tanmay/NodeServerT/node_modules/cassandra-driver/lib/utils.js:674:21
+    at nextTickCallbackWith0Args (node.js:419:9)
+    at process._tickCallback (node.js:348:13)
+placed order : 
+{ items: 
+   [ { qty: 2,
+       name: 'Latte',
+       milk_type: 'Regular',
+       size: 'Large',
+       price: 3.75 },
+     { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: 3.85 },
+     { qty: 3,
+       name: 'Cappuccino',
+       milk_type: 'Regular',
+       size: 'Small',
+       price: 3.65 } ],
+  amount: 22.3,
+  location: 'San Jose',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { qty: 2,
+       name: 'Latte',
+       milk_type: 'Regular',
+       size: 'Large',
+       price: 3.75 },
+     { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: 3.85 },
+     { qty: 3,
+       name: 'Cappuccino',
+       milk_type: 'Regular',
+       size: 'Small',
+       price: 3.65 } ],
+  amount: 22.3,
+  location: 'San Jose',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { qty: 2,
+       name: 'Latte',
+       milk_type: 'Regular',
+       size: 'Large',
+       price: 3.75 },
+     { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: 3.85 },
+     { qty: 3,
+       name: 'Cappuccino',
+       milk_type: 'Regular',
+       size: 'Small',
+       price: 3.65 } ],
+  amount: 22.3,
+  location: 'San Jose',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { qty: 2,
+       name: 'Latte',
+       milk_type: 'Regular',
+       size: 'Large',
+       price: 3.75 },
+     { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: 3.85 },
+     { qty: 3,
+       name: 'Cappuccino',
+       milk_type: 'Regular',
+       size: 'Small',
+       price: 3.65 } ],
+  amount: 22.3,
+  location: 'San Jose',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { qty: 2,
+       name: 'Latte',
+       milk_type: 'Regular',
+       size: 'Large',
+       price: 3.75 },
+     { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: 3.85 },
+     { qty: 3,
+       name: 'Cappuccino',
+       milk_type: 'Regular',
+       size: 'Small',
+       price: 3.65 } ],
+  amount: 22.3,
+  location: 'San Jose',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { qty: 2,
+       name: 'Latte',
+       milk_type: 'Regular',
+       size: 'Large',
+       price: 3.75 },
+     { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: 3.85 },
+     { qty: 3,
+       name: 'Cappuccino',
+       milk_type: 'Regular',
+       size: 'Small',
+       price: 3.65 } ],
+  amount: 22.3,
+  location: 'San Jose',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Macchiato',
+       qty: 2,
+       milk_type: 'Whole',
+       size: 'Medium',
+       price: 2 } ],
+  amount: 4,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Macchiato',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+Updated order : 
+{ items: 
+   [ { name: 'Macchiato',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 },
+     { name: 'Espresso',
+       qty: 2,
+       milk_type: 'Low-fat',
+       size: 'Small',
+       price: 1.5 } ],
+  order_id: '6c43e5f7-c36a-49fc-92f9-8adfb6a2e834',
+  amount: 4.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Latte',
+       qty: 1,
+       milk_type: 'Fat-free',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Latte',
+       qty: 15,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 22.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Cappuccino',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Americano',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Americano',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+Updated order : 
+{ items: 
+   [ { name: 'Cappuccino',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  order_id: '61bb92a8-23b8-4895-8d43-c28e493defd2',
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Americano',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Cappuccino',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Espresso',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+Updated order : 
+{ items: 
+   [ { name: 'Espresso',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 },
+     { name: 'Americano',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  order_id: '0e1662a2-64a2-4cb3-8aaa-9f52a404c80f',
+  amount: 3,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Americano',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 },
+     { name: 'Cappuccino',
+       qty: 2,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 4.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Espresso',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Americano',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Americano',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { name: 'Americano',
+       qty: 1,
+       milk_type: 'Whole',
+       size: 'Small',
+       price: 1.5 } ],
+  amount: 1.5,
+  location: 'Santa Clara',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { qty: 2,
+       name: 'Latte',
+       milk_type: 'Regular',
+       size: 'Large',
+       price: 3.75 },
+     { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: 3.85 },
+     { qty: 3,
+       name: 'Cappuccino',
+       milk_type: 'Regular',
+       size: 'Small',
+       price: 3.65 } ],
+  amount: 22.3,
+  location: 'San Jose',
+  status: 'PLACED' }
+Updated order : 
+{ items: 
+   [ { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: '3.85' } ],
+  order_id: 'ebd893b1-f6a8-40c7-95bf-9cfc1e82b89b',
+  amount: '22.3',
+  location: 'San Jose',
+  status: 'PLACED' }
+Updated order : 
+{ items: 
+   [ { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: '3.85' } ],
+  order_id: 'ebd893b1-f6a8-40c7-95bf-9cfc1e82b89b',
+  amount: '22.3',
+  location: 'San Jose',
+  status: 'PLACED' }
+placed order : 
+{ items: 
+   [ { qty: 2,
+       name: 'Latte',
+       milk_type: 'Regular',
+       size: 'Large',
+       price: 3.75 },
+     { qty: 1,
+       name: 'Mochaccino',
+       milk_type: 'Low fat',
+       size: 'Meduim',
+       price: 3.85 },
+     { qty: 3,
+       name: 'Cappuccino',
+       milk_type: 'Regular',
+       size: 'Small',
+       price: 3.65 } ],
+  amount: 22.3,
+  location: 'San Jose',
+  status: 'PLACED' }

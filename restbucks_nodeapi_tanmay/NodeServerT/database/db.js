@@ -1,7 +1,7 @@
 var cassandra = require('cassandra-driver');
 var uuid = cassandra.types.Uuid;
 var  reply = require('../reply.js');
-var contactpoint = new cassandra.Client({contactPoints : [reply.contactPoint1], keyspace: 'restbucks'});
+var contactpoint = new cassandra.Client({contactPoints : [reply.contactPoint1,reply.contactPoint2,reply.contactPoint3], keyspace: 'restbucks'});
 
 const querystring = require('querystring');
 
@@ -21,7 +21,7 @@ exports.placeOrder = function(order,callback) {
 		}
 		else {
 			response.status = reply.success_status;
-			response.id = id;
+			response.order_id = id;
 			//response.stack = result;
 		}
 		callback(response);

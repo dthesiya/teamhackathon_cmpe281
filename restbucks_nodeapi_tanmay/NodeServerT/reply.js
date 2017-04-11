@@ -10,10 +10,13 @@ reply.message.err_calcelPaid = "Order Cancelling Rejected"
 reply.message.err_cancel = "Couldn't cancel order"
 reply.message.err_cancel = "Couldn't complete payment"
 
-reply.contactPoint1 = '192.168.99.100';
-reply.contactPoint2 = ''
+reply.contactPoint1 = '52.53.74.163';
+reply.contactPoint2 = '52.53.59.110';
+reply.contactPoint3 = '52.53.58.44';
 
-reply.success_status = 200;
-reply.error_status = 404;
+
+
+reply.success_status = "200";
+reply.error_status = "404";
 
 module.exports = reply;
