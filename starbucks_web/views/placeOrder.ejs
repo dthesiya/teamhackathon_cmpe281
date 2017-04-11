@@ -1,4 +1,4 @@
-<div id="placeorder" ng-controller="orderController" ng-init="">
+<div id="placeorder" ng-init="selectCity()">
     <form class="container" id="myForm" ng-submit="placeOrder()">
         <div class="panel panel-info">
             <div class="panel-heading">Order</div>
@@ -8,19 +8,19 @@
                         <h3 style="display: inline">Order from:</h3>
                     </div>
                     <div class="col-md-4">
-                        <select class="selectpicker" id="location" name="location">
+                        <select class="selectpicker" ng-change="locationChanged()" id="store" name="location" ng-model="city">
                             <option ng-repeat="location in locations" value="{{location}}">{{location}}</option>
                         </select>
                     </div>
                     <div class="col-md-6 text-right">
-                        <button id="edit" class="btn btn-success" ng-click="allOrders()">All Orders</button>
+                        <button id="edit" type="button" class="btn btn-success" ng-click="allOrders()">All Orders</button>
                     </div>
                 </div>
                 <hr/>
                 <div class="row top-buffer">
                     <div class="col-md-6 text-left"><h4>Build your order here</h4></div>
                     <div class="col-md-6 text-right">
-                        <button id="add" class="btn btn-info" onclick="addRow('myTable')">Add Item</button>
+                        <button id="add" type="button" class="btn btn-info" onclick="addRow('myTable')">Add Item</button>
                     </div>
                 </div>
                 <div class="table-responsive top-buffer">
@@ -43,7 +43,8 @@
                                 </select>
                             </td>
                             <td class="text-center">
-                                <input required name="qty" maxlength="2" class="form-control input-sm" id="inputsm" type="number">
+                                <input min="1" max="100" value="1" required name="qty" maxlength="2"
+                                       class="form-control input-sm" id="inputsm" type="number">
                             </td>
                             <td class="text-center">
                                 <select class="dropdown" id="milk" name="milk_type">
@@ -57,7 +58,7 @@
                                             value="{{size}}">{{size}}</option>
                                 </select>
                             </td>
-                            <td class="text-center"><label for="myvalue">$ {{prices.small}}</label></td>
+                            <td class="text-center"><label for="myvalue">$ {{prices.Small}}</label></td>
                             <td>
                     <span type="button" class="remove glyphicon glyphicon-remove-sign" style="color:red"
                           onclick="$(this).parent().parent().remove();"></span>

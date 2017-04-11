@@ -3,7 +3,8 @@
  */
 var config = {};
 config.cassandra = {};
-config.cassandra.contactPoints = '127.0.0.1';
+config.cassandra.contactPoints1 = '52.53.135.220';
+config.cassandra.contactPoints2 = '52.8.118.133';
 config.cassandra.keyspace = 'restbucks';
 
 config.priceCatalog = {};
@@ -47,8 +48,8 @@ config.message.success_cancel = "Requested order cancelled";
 config.message.success_pay = "Requested order paid";
 
 config.responde_status = {};
-config.responde_status.err = 404;
-config.responde_status.success = 200;
+config.responde_status.err = "404";
+config.responde_status.success = "200";
 
 
 module.exports = config;

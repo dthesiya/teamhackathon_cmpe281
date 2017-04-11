@@ -23,15 +23,23 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views')));
 
+//get
 app.get('/', index.getindex);
 app.get('/coffees', index.getCoffeeDetails);
 app.get('/locations', index.getLocations);
-app.post('/order', order.placeOrder);
 app.get('/order/:orderId', order.orderDetails);
+app.get('/orders', order.getAllOrders);
+
+//post
+app.post('/order', order.placeOrder);
+
+//put
 app.put('/order/:orderId', order.updateOrder);
 app.put('/pay/:orderId', order.payOrder);
+
+//delete
 app.delete('/order/:orderId', order.cancelOrder);
-app.get('/orders', order.getAllOrders);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -51,4 +59,5 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
+//Making express app available across all files as variable.
 module.exports = app;

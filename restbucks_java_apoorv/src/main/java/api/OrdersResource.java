@@ -24,6 +24,7 @@ public class OrdersResource extends ServerResource {
        for (int i = 0; i < orders.size(); i++) {  // **line 2**
              JSONObject individual_order = new JSONObject(new ObjectMapper().writeValueAsString(orders.get(i)));
              jsonorders.add(individual_order);
+           //  System.out.println("added order_id to representation:"+orders.get(i).getOrder_id());
              
        }
         

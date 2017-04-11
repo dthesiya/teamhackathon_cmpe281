@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
     <script src="/controller/routeConfig.js"></script>
     <script src="/controller/orderController.js"></script>
@@ -22,18 +22,13 @@
                     newcell.innerHTML = table.rows[rowCount - 1].cells[i].innerHTML;
                     newcell.style.textAlign = 'center';
                     if (i === colCount - 2) {
-                        var smallvalue = $('[ng-controller="orderController"]').scope().prices.small;
+                        var smallvalue = $('[ng-controller="orderController"]').scope().prices.Small;
                         newcell.childNodes[0].innerHTML = "$ " + smallvalue;
                     } else {
                         switch (newcell.childNodes[0].type) {
-                            case "text":
-                                newcell.childNodes[0].value = "";
-                                break;
                             case "number":
-                                newcell.childNodes[0].value = "";
-                                break;
-                            case "checkbox":
-                                newcell.childNodes[0].checked = false;
+                            case "text":
+                                newcell.childNodes[0].value = "1";
                                 break;
                             case "select-one":
                             case "dropdown":
@@ -44,19 +39,19 @@
                 }
             }else{
                 var newcell = row.insertCell(0);
-                newcell.innerHTML = "<select class='dropdown' id='coffee' name='coffee'> <option value='mocha'>Mocha</option> <option value='tea'>Tea</option> <option value='cappuccino'>Cappuccino</option> </select>";
+                newcell.innerHTML = "<select class='dropdown' id='coffee' name='name'> <option value='Americano'>Americano</option> <option value='Cappuccino'>Cappuccino</option> <option value='Espresso'>Espresso</option> <option value='Latte'>Latte</option> <option value='Macchiato'>Macchiato</option> <option value='Mocha'>Mocha</option> </select>";
                 newcell.style.textAlign = 'center';
                 var newcell = row.insertCell(1);
-                newcell.innerHTML = "<input name='qty' class='form-control input-sm' id='inputsm' type='number'>";
+                newcell.innerHTML = "<input name='qty' required min='1' max='100' value='1' class='form-control input-sm' id='inputsm' type='number'>";
                 newcell.style.textAlign = 'center';
                 var newcell = row.insertCell(2);
-                newcell.innerHTML = "<select class='dropdown' id='milk' name='milk_type'> <option value='whole'>Whole</option> <option value='latte'>Latte</option> <option>Soy</option> </select>";
+                newcell.innerHTML = "<select class='dropdown' id='milk' name='milk_type'> <option value='Whole'>Whole</option> <option value='Low-fat'>Low-fat</option> <option value='Fat-free'>Fat-free</option> </select>";
                 newcell.style.textAlign = 'center';
                 var newcell = row.insertCell(3);
-                newcell.innerHTML = "<select class='dropdown' id='size' onchange='sizeChanged(this)' name='size'> <option value='small' selected>Small</option> <option value='medium'>Medium</option> <option value='large'>large</option> </select>";
+                newcell.innerHTML = "<select class='dropdown' id='size' onchange='sizeChanged(this)' name='size'> <option value='Small' selected>Small</option> <option value='Medium'>Medium</option> <option value='Large'>Large</option> </select>";
                 newcell.style.textAlign = 'center';
                 var newcell = row.insertCell(4);
-                var smallvalue = $('[ng-controller="orderController"]').scope().prices.small;
+                var smallvalue = $('[ng-controller="orderController"]').scope().prices.Small;
                 newcell.innerHTML = "<label for='myvalue'>$ "+ smallvalue +"</label>";
                 newcell.style.textAlign = 'center';
                 var newcell = row.insertCell(5);
@@ -68,44 +63,18 @@
         function sizeChanged(element) {
             var size = $(element).val();
             var scope = $('[ng-controller="orderController"]').scope();
-            switch (size) {
-                case "small": {
-                    var temp =
-                        $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.small);
-                    break;
-                }
-                case "medium": {
-                    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.medium);
-                    break;
-                }
-                case "large": {
-                    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.large);
-                    break;
-                }
-                default: {
-                    $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices.small);
-                    break;
-                }
-            }
+	        $(element).parent().parent().find("label[for='myvalue']").html("$ " + scope.prices[size]);
         };
     </script>
 </head>
 
-<body ng-app="hackathonApp">
+<body ng-app="hackathonApp" ng-controller="orderController">
 <div>
     <h1 class="text-center jumbotron">Starbucks Coffee Shop</h1>
-    <div class="navbar-default" role="navigation">
-        <div class="container">
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <!--<a href="#placeorder" data-title="Place Order" ng-click="">-->
-                        <!--<i class="fa fa-dashboard"></i>-->
-                        <!--Place Order-->
-                        <!--</a>-->
-                    </li>
-                </ul>
-            </div>
+    <div class="row">
+        <div class="text-center">
+            <h3 ng-show="{{isError === true}}"
+                ng-hide="{{isError === false}}" style="color: red">{{ errorMessage }}</h3>
         </div>
     </div>
 </div>
