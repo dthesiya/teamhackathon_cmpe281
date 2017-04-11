@@ -51,4 +51,5 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
+//Making express app available across all files as variable.
 module.exports = app;

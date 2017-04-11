@@ -13,7 +13,7 @@ reply.message.err_cancel = "Couldn't complete payment"
 reply.contactPoint1 = '192.168.99.100';
 reply.contactPoint2 = ''
 
-reply.success_status = 200;
-reply.error_status = 404;
+reply.success_status = "200";
+reply.error_status = "404";
 
 module.exports = reply;

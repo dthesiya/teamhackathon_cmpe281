@@ -21,7 +21,7 @@ exports.placeOrder = function(order,callback) {
 		}
 		else {
 			response.status = reply.success_status;
-			response.id = id;
+			response.order_id = id;
 			//response.stack = result;
 		}
 		callback(response);

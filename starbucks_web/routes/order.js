@@ -9,6 +9,8 @@ var request = require('sync-request');
 var host = config.kong.host + ":" + config.kong.port;
 var prices = config.coffee.prices;
 
+// Function for placing the order
+
 exports.placeOrder = function (req, res, next) {
     var order = req.body.order;
     var amount = 0;
@@ -24,6 +26,8 @@ exports.placeOrder = function (req, res, next) {
     var resp = JSON.parse(resp.getBody('utf8'));
     res.send({status : 200, data : resp}).end();
 };
+
+//Function for updating the order
 
 exports.updateOrder = function (req, res, next) {
     var orderId = req.params.orderId;
@@ -43,6 +47,8 @@ exports.updateOrder = function (req, res, next) {
     res.send({status : 200, data : resp}).end();
 };
 
+//Function for getting order details
+
 exports.orderDetails = function (req, res, next) {
     var orderId = req.params.orderId;
     var location = req.headers["location"];
@@ -52,6 +58,8 @@ exports.orderDetails = function (req, res, next) {
     var resp = JSON.parse(resp.getBody('utf8'));
     res.send({status : 200, data : resp}).end();
 };
+
+//Function for making payment
 
 exports.payOrder = function (req, res, next) {
     var orderId = req.params.orderId;
@@ -63,6 +71,8 @@ exports.payOrder = function (req, res, next) {
     res.send({status : 200, data : resp}).end();
 };
 
+// Function for cancelling the order
+
 exports.cancelOrder = function (req, res, next) {
     var orderId = req.params.orderId;
     var location = req.headers["location"];
@@ -72,6 +82,8 @@ exports.cancelOrder = function (req, res, next) {
     var resp = JSON.parse(resp.getBody('utf8'));
     res.send({status : 200, data : resp}).end();
 };
+
+// Function for getting list of all orders
 
 exports.getAllOrders = function (req, res, next) {
     var orderId = req.params.orderId;
