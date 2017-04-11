@@ -11,7 +11,7 @@ app.use('/',apis);
 app.set('port', process.env.PORT || 3000); 
 
 app.use(function (req, res, next) {
-	var resp = {};
+	var response = {};
 
     response.status = 404;
  	response.message = "Not found";
