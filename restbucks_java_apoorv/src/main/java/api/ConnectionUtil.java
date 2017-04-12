@@ -17,6 +17,10 @@ import api.RestbucksAPI.OrderStatus;
 
 
 public class ConnectionUtil {
+	private static String connectionPoint1="52.53.62.62";
+	private static String connectionPoint2="34.209.207.74";
+	private static String connectionPoint3="52.53.122.6";
+
 	Session session = null;
 	Cluster cluster = null;
 	final String KEYSPACE = "restbucks";
@@ -36,7 +40,7 @@ public class ConnectionUtil {
 	
 	public ConnectionUtil () {
 
-		this.cluster = Cluster.builder().addContactPoint("54.215.129.148").withPort(9042).build();
+		this.cluster = Cluster.builder().addContactPoint(connectionPoint1).addContactPoint(connectionPoint2).addContactPoint(connectionPoint3).withPort(9042).build();
 		   
 		this.session = cluster.connect("restbucks");
 		
