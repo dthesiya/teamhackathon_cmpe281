@@ -1,13 +1,12 @@
-# teamhackathon_cmpe281
+## teamhackathon_cmpe281
 CMPE281 SPRING 2017 team hackathon content
 
-PURPOSE OF PROJECT
-==================
+## PURPOSE OF PROJECT
 
-> To create an application interacting with multiple servers through kong gateway.
+To create an application interacting with multiple servers through kong gateway.
 
-HOW TO START THIS APPLICATION
-=============================
+
+## HOW TO START THIS APPLICATION
 
 1. Create a cassandra node(or a 3 node cluster in our case) per server.
 
@@ -21,14 +20,13 @@ HOW TO START THIS APPLICATION
 
 5. Deploy web application(portal) on Heroku PaaS platfor which will be communicating with kong.
 
-License
-=======
+
+## License
 
 This application is released under the [GNU General Public License v3.0](https://github.com/dthesiya/teamhackathon_cmpe281/blob/master/LICENSE).
 
 
-Team QuadCore
-=============
+## Team QuadCore
 
 > [Apoorv Mehta](https://github.com/appsmehta)
 
