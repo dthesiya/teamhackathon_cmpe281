@@ -1,3 +1,0 @@
-All routes for KONG API to be updated in the config.JSON file. 
-
-No hard-coding of kong routes in Node route file. 
